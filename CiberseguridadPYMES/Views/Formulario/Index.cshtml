@@ -1,0 +1,93 @@
+﻿@model IEnumerable<CiberseguridadPYMES.Models.Formulario>
+
+@{
+    ViewData["Title"] = "Formularios";
+}
+
+<h1>Formularios de evaluación</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
+
+@if (User.IsInRole("Administrador"))
+{
+    <p>
+        <a asp-action="Crear" class="btn btn-primary">
+            Registrar formulario
+        </a>
+    </p>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No hay formularios registrados.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Versión</th>
+                <th>Tipo de sistema</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var formulario in Model)
+        {
+            <tr>
+                <td>@formulario.Nombre</td>
+                <td>@formulario.Version</td>
+                <td>@formulario.TipoSistema?.Nombre</td>
+                <td>
+                    @if (formulario.Activo)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactivo</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Detalles"
+                       asp-route-id="@formulario.Id"
+                       class="btn btn-info btn-sm">
+                        Detalles
+                    </a>
+
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a asp-action="Editar"
+                           asp-route-id="@formulario.Id"
+                           class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <a asp-action="Eliminar"
+                           asp-route-id="@formulario.Id"
+                           class="btn btn-danger btn-sm">
+                            Eliminar
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

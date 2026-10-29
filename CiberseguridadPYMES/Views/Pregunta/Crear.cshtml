@@ -1,0 +1,174 @@
+﻿@{
+    ViewData["Title"] = "Registrar pregunta";
+
+    string tipoRespuestaSeleccionado =
+        ViewData["TipoRespuesta"]?.ToString() ?? "CincoOpciones";
+}
+
+<h1>Registrar pregunta</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Crear" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label for="formularioId" class="form-label">
+                    Formulario
+                </label>
+
+                <select id="formularioId"
+                        name="formularioId"
+                        class="form-select"
+                        asp-items="ViewBag.Formularios"
+                        required>
+                    <option value="">Seleccione un formulario</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="dimensionId" class="form-label">
+                    Dimensión de ciberseguridad
+                </label>
+
+                <select id="dimensionId"
+                        name="dimensionId"
+                        class="form-select"
+                        asp-items="ViewBag.Dimensiones"
+                        required>
+                    <option value="">Seleccione una dimensión</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="texto" class="form-label">
+                    Texto de la pregunta
+                </label>
+
+                <textarea id="texto"
+                          name="texto"
+                          class="form-control"
+                          rows="3"
+                          maxlength="1000"
+                          required>@ViewData["Texto"]</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="referenciaTecnica" class="form-label">
+                    Referencia técnica
+                </label>
+
+                <input id="referenciaTecnica"
+                       name="referenciaTecnica"
+                       class="form-control"
+                       maxlength="300"
+                       value="@ViewData["ReferenciaTecnica"]" />
+
+                <small class="form-text text-muted">
+                    Ejemplo: ISO/IEC 27001:2022 o NIST CSF 2.0.
+                </small>
+            </div>
+
+            <div class="mb-3">
+                <label for="criterioCumplimiento" class="form-label">
+                    Criterio de cumplimiento
+                </label>
+
+                <textarea id="criterioCumplimiento"
+                          name="criterioCumplimiento"
+                          class="form-control"
+                          rows="3"
+                          maxlength="1000">@ViewData["CriterioCumplimiento"]</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="tipoRespuesta" class="form-label">
+                    Tipo de respuesta
+                </label>
+
+                <select id="tipoRespuesta"
+                        name="tipoRespuesta"
+                        class="form-select"
+                        required>
+                    @if (tipoRespuestaSeleccionado == "CincoOpciones")
+                    {
+                        <option value="CincoOpciones" selected>
+                            Cinco opciones
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="CincoOpciones">
+                            Cinco opciones
+                        </option>
+                    }
+
+                    @if (tipoRespuestaSeleccionado == "DosOpciones")
+                    {
+                        <option value="DosOpciones" selected>
+                            Dos opciones (Sí/No)
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="DosOpciones">
+                            Dos opciones (Sí/No)
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="orden" class="form-label">
+                    Orden de presentación
+                </label>
+
+                <input id="orden"
+                       name="orden"
+                       type="number"
+                       class="form-control"
+                       min="1"
+                       value="@(ViewData["Orden"] ?? 1)"
+                       required />
+            </div>
+
+            <div class="form-check mb-3">
+                @if (ViewData["Activa"] == null ||
+                     (bool)ViewData["Activa"]!)
+                {
+                    <input id="activa"
+                           name="activa"
+                           type="checkbox"
+                           value="true"
+                           class="form-check-input"
+                           checked />
+                }
+                else
+                {
+                    <input id="activa"
+                           name="activa"
+                           type="checkbox"
+                           value="true"
+                           class="form-check-input" />
+                }
+
+                <input type="hidden" name="activa" value="false" />
+
+                <label for="activa" class="form-check-label">
+                    Pregunta activa
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar pregunta
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>

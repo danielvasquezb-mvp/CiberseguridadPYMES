@@ -1,0 +1,61 @@
+﻿@model CiberseguridadPYMES.Models.Pregunta
+
+@{
+    ViewData["Title"] = "Detalles de la pregunta";
+}
+
+<h1>Detalles de la pregunta</h1>
+
+<div class="card">
+    <div class="card-header">
+        Información de la pregunta
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Formulario</dt>
+            <dd class="col-sm-9">@Model.Formulario?.Nombre</dd>
+
+            <dt class="col-sm-3">Dimensión</dt>
+            <dd class="col-sm-9">@Model.Dimension?.Nombre</dd>
+
+            <dt class="col-sm-3">Pregunta</dt>
+            <dd class="col-sm-9">@Model.Texto</dd>
+
+            <dt class="col-sm-3">Referencia técnica</dt>
+            <dd class="col-sm-9">
+                @(string.IsNullOrWhiteSpace(Model.ReferenciaTecnica)
+                    ? "No especificada"
+                    : Model.ReferenciaTecnica)
+            </dd>
+
+            <dt class="col-sm-3">Criterio de cumplimiento</dt>
+            <dd class="col-sm-9">
+                @(string.IsNullOrWhiteSpace(Model.CriterioCumplimiento)
+                    ? "No especificado"
+                    : Model.CriterioCumplimiento)
+            </dd>
+
+            <dt class="col-sm-3">Orden</dt>
+            <dd class="col-sm-9">@Model.Orden</dd>
+
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">
+                @(Model.Activa ? "Activa" : "Inactiva")
+            </dd>
+        </dl>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Volver
+        </a>
+
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Editar"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                Editar
+            </a>
+        }
+    </div>
+</div>

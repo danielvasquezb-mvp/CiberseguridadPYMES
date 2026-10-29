@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <h2 class="text-center mb-2">
+                        Iniciar sesión
+                    </h2>
+
+                    <p class="text-center text-muted mb-4">
+                        Ingresa a CiberseguridadPYMES
+                    </p>
+
+                    <form asp-controller="Account"
+                          asp-action="Login"
+                          asp-route-returnUrl="@ViewBag.ReturnUrl"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">
+                                Correo electrónico
+                            </label>
+
+                            <input type="email"
+                                   id="correo"
+                                   name="correo"
+                                   class="form-control"
+                                   value="@ViewData["Correo"]"
+                                   autocomplete="username"
+                                   required />
+
+                            <span class="text-danger">
+                                @Html.ValidationMessage("correo")
+                            </span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                Contraseña
+                            </label>
+
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   class="form-control"
+                                   autocomplete="current-password"
+                                   required />
+
+                            <span class="text-danger">
+                                @Html.ValidationMessage("password")
+                            </span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input type="checkbox"
+                                   id="recordarSesion"
+                                   name="recordarSesion"
+                                   value="true"
+                                   class="form-check-input" />
+
+                            <label for="recordarSesion"
+                                   class="form-check-label">
+                                Mantener la sesión iniciada
+                            </label>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Iniciar sesión
+                        </button>
+
+                    </form>
+
+                    <p class="text-center mt-3 mb-0">
+                        ¿No tienes una cuenta?
+                        <a asp-controller="Account"
+                           asp-action="Register">
+                            Regístrate
+                        </a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

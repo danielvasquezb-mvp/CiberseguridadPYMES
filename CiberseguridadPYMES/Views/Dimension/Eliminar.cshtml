@@ -1,0 +1,46 @@
+﻿@model CiberseguridadPYMES.Models.Dimension
+
+@{
+    ViewData["Title"] = "Eliminar dimensión";
+}
+
+<h1>Eliminar dimensión</h1>
+
+<div class="alert alert-warning">
+    <strong>Atención:</strong>
+    ¿Estás seguro de que deseas eliminar esta dimensión?
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p>
+            <strong>Código:</strong> @Model.Codigo
+        </p>
+
+        <p>
+            <strong>Nombre:</strong> @Model.Nombre
+        </p>
+
+        <p>
+            <strong>Descripción:</strong>
+            @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                ? "Sin descripción"
+                : Model.Descripcion)
+        </p>
+    </div>
+</div>
+
+<form asp-action="Eliminar"
+      asp-route-id="@Model.Id"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-danger">
+        Confirmar eliminación
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Cancelar
+    </a>
+</form>

@@ -1,0 +1,32 @@
+﻿
+@model CiberseguridadPYMES.Models.Empresa
+
+@{
+    ViewData["Title"] = "Eliminar empresa";
+}
+
+<h1>Eliminar empresa</h1>
+
+<div class="alert alert-warning">
+    ¿Estás seguro de que deseas eliminar esta empresa?
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+        <p><strong>Sector:</strong> @Model.Sector</p>
+        <p><strong>Municipio:</strong> @Model.Municipio</p>
+    </div>
+</div>
+
+<form asp-action="Eliminar" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-danger">
+        Confirmar eliminación
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Cancelar
+    </a>
+</form>

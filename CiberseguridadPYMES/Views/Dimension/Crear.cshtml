@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewData["Title"] = "Registrar dimensión";
+}
+
+<h1>Registrar dimensión</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Crear" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label for="codigo" class="form-label">
+                    Código
+                </label>
+
+                <input id="codigo"
+                       name="codigo"
+                       class="form-control"
+                       value="@ViewData["Codigo"]"
+                       placeholder="Ej. D1"
+                       maxlength="10"
+                       required />
+
+                <small class="form-text text-muted">
+                    Identificador único de la dimensión, por ejemplo D1, D2 o D3.
+                </small>
+            </div>
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">
+                    Nombre de la dimensión
+                </label>
+
+                <input id="nombre"
+                       name="nombre"
+                       class="form-control"
+                       value="@ViewData["Nombre"]"
+                       placeholder="Ej. Gestión de accesos"
+                       maxlength="150"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">
+                    Descripción
+                </label>
+
+                <textarea id="descripcion"
+                          name="descripcion"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Describe qué aspectos de ciberseguridad evalúa esta dimensión.">@ViewData["Descripcion"]</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar dimensión
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>
+    

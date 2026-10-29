@@ -1,0 +1,56 @@
+﻿@model CiberseguridadPYMES.Models.Formulario
+
+@{
+    ViewData["Title"] = "Eliminar formulario";
+}
+
+<h1>Eliminar formulario</h1>
+
+<div class="alert alert-warning" role="alert">
+    <strong>Atención:</strong>
+    ¿Estás seguro de que deseas eliminar este formulario?
+    Esta acción puede estar impedida si existen preguntas o evaluaciones relacionadas.
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Confirmar eliminación
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Versión</dt>
+            <dd class="col-sm-9">@Model.Version</dd>
+
+            <dt class="col-sm-3">Tipo de sistema</dt>
+            <dd class="col-sm-9">
+                @(Model.TipoSistema?.Nombre ?? "No especificado")
+            </dd>
+
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">
+                @(Model.Activo ? "Activo" : "Inactivo")
+            </dd>
+        </dl>
+
+        <form asp-action="Eliminar"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <button type="submit" class="btn btn-danger">
+                Confirmar eliminación
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>

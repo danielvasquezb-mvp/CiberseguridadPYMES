@@ -1,0 +1,134 @@
+﻿
+@model IEnumerable<CiberseguridadPYMES.Models.Evaluacion>
+
+@{
+    ViewData["Title"] = "Mis evaluaciones";
+}
+
+<h1>Mis evaluaciones</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
+@if (User.IsInRole("Responsable del sistema"))
+{
+    <p>
+        <a asp-action="Crear" class="btn btn-primary">
+            Iniciar evaluación
+        </a>
+    </p>
+}
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>Formulario</th>
+                    <th>Fecha de inicio</th>
+                    <th>Fecha de finalización</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var evaluacion in Model)
+                {
+                    <tr>
+                        <td>@evaluacion.Empresa?.Nombre</td>
+
+                        <td>@evaluacion.Formulario?.Nombre</td>
+
+                        <td>
+                            @evaluacion.FechaInicio.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+
+                        <td>
+                            @(evaluacion.FechaFinalizacion.HasValue
+                                ? evaluacion.FechaFinalizacion.Value.ToString("dd/MM/yyyy HH:mm")
+                                : "Pendiente")
+                        </td>
+
+                        <td>
+                            @if (evaluacion.Estado == "En proceso")
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    En proceso
+                                </span>
+                            }
+                            else if (evaluacion.Estado == "Finalizada")
+                            {
+                                <span class="badge bg-success">
+                                    Finalizada
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    @evaluacion.Estado
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (evaluacion.Estado == "En proceso" &&
+                                 User.IsInRole("Responsable del sistema"))
+                            {
+                                <a asp-action="Responder"
+                                   asp-route-id="@evaluacion.Id"
+                                   class="btn btn-primary btn-sm">
+                                    Continuar
+                                </a>
+                            }
+                            else if (evaluacion.Estado == "Finalizada" &&
+                                     User.IsInRole("Responsable del sistema"))
+                            {
+                                <form asp-controller="Diagnostico"
+                                      asp-action="Generar"
+                                      method="post"
+                                      class="d-inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="evaluacionId"
+                                           value="@evaluacion.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm">
+                                        Generar diagnóstico
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin acciones</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        Todavía no hay evaluaciones registradas.
+        Selecciona «Iniciar evaluación» para comenzar.
+    </div>
+}

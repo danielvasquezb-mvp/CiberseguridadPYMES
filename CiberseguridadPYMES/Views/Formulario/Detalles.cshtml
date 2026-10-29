@@ -1,0 +1,53 @@
+﻿@model CiberseguridadPYMES.Models.Formulario
+
+@{
+    ViewData["Title"] = "Detalles del formulario";
+}
+
+<h1>Detalles del formulario</h1>
+
+<div class="card">
+    <div class="card-header">
+        Información del formulario
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Versión</dt>
+            <dd class="col-sm-9">@Model.Version</dd>
+
+            <dt class="col-sm-3">Tipo de sistema</dt>
+            <dd class="col-sm-9">
+                @(Model.TipoSistema?.Nombre ?? "No especificado")
+            </dd>
+
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">
+                @if (Model.Activo)
+                {
+                    <span class="badge bg-success">Activo</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Inactivo</span>
+                }
+            </dd>
+        </dl>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Volver
+        </a>
+
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Editar"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                Editar
+            </a>
+        }
+    </div>
+</div>

@@ -1,0 +1,68 @@
+﻿@model CiberseguridadPYMES.Models.Dimension
+
+@{
+    ViewData["Title"] = "Editar dimensión";
+}
+
+<h1>Editar dimensión</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Editar"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label for="codigo" class="form-label">
+                    Código
+                </label>
+
+                <input id="codigo"
+                       name="codigo"
+                       class="form-control"
+                       value="@Model.Codigo"
+                       maxlength="10"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">
+                    Nombre de la dimensión
+                </label>
+
+                <input id="nombre"
+                       name="nombre"
+                       class="form-control"
+                       value="@Model.Nombre"
+                       maxlength="150"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">
+                    Descripción
+                </label>
+
+                <textarea id="descripcion"
+                          name="descripcion"
+                          class="form-control"
+                          rows="4">@Model.Descripcion</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar cambios
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>

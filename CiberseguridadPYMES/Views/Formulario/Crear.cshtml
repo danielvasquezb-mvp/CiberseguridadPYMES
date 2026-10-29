@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Registrar formulario";
+}
+
+<h1>Registrar formulario</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Crear" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input id="nombre"
+                       name="nombre"
+                       class="form-control"
+                       value="@ViewData["Nombre"]"
+                       maxlength="150"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label for="version" class="form-label">Versión</label>
+                <input id="version"
+                       name="version"
+                       class="form-control"
+                       value="@(ViewData["Version"] ?? "1.0")"
+                       maxlength="20"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label for="tipoSistemaId" class="form-label">
+                    Tipo de sistema
+                </label>
+                <select id="tipoSistemaId"
+                        name="tipoSistemaId"
+                        class="form-select"
+                        asp-items="ViewBag.TiposSistema"
+                        required>
+                    <option value="">Seleccione un tipo de sistema</option>
+                </select>
+            </div>
+
+            <div class="form-check mb-3">
+                <input id="activo"
+                       name="activo"
+                       type="checkbox"
+                       value="true"
+                       class="form-check-input"
+                       checked="@(ViewData["Activo"] == null ||
+                                  (bool)ViewData["Activo"])" />
+
+                <input type="hidden" name="activo" value="false" />
+
+                <label for="activo" class="form-check-label">
+                    Formulario activo
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar formulario
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>

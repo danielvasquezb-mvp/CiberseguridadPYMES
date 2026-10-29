@@ -1,0 +1,28 @@
+﻿
+@model CiberseguridadPYMES.Models.TipoSistema
+
+@{
+    ViewData["Title"] = "Detalles del tipo de sistema";
+}
+
+<h1>Detalles del tipo de sistema</h1>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+        <p><strong>Descripción:</strong> @Model.Descripcion</p>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Volver
+        </a>
+
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Editar"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                Editar
+            </a>
+        }
+    </div>
+</div>

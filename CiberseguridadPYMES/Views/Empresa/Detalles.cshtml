@@ -1,0 +1,30 @@
+﻿
+@model CiberseguridadPYMES.Models.Empresa
+
+@{
+    ViewData["Title"] = "Detalles de la empresa";
+}
+
+<h1>Detalles de la empresa</h1>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Sector</dt>
+            <dd class="col-sm-9">@Model.Sector</dd>
+
+            <dt class="col-sm-3">Municipio</dt>
+            <dd class="col-sm-9">@Model.Municipio</dd>
+        </dl>
+
+        <a asp-action="Editar"
+           asp-route-id="@Model.Id"
+           class="btn btn-warning">Editar</a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">Volver</a>
+    </div>
+</div>

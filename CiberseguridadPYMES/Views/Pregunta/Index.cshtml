@@ -1,0 +1,86 @@
+﻿@model IEnumerable<CiberseguridadPYMES.Models.Pregunta>
+
+@{
+    ViewData["Title"] = "Gestión de preguntas";
+}
+
+<h1>Gestión de preguntas</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
+
+@if (User.IsInRole("Administrador"))
+{
+    <p>
+        <a asp-action="Crear" class="btn btn-primary">
+            Registrar pregunta
+        </a>
+    </p>
+}
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Orden</th>
+            <th>Pregunta</th>
+            <th>Formulario</th>
+            <th>Dimensión</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pregunta in Model)
+        {
+            <tr>
+                <td>@pregunta.Orden</td>
+                <td>@pregunta.Texto</td>
+                <td>@pregunta.Formulario?.Nombre</td>
+                <td>@pregunta.Dimension?.Nombre</td>
+                <td>
+                    @if (pregunta.Activa)
+                    {
+                        <span class="badge bg-success">Activa</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactiva</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Detalles"
+                       asp-route-id="@pregunta.Id"
+                       class="btn btn-info btn-sm">
+                        Detalles
+                    </a>
+
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a asp-action="Editar"
+                           asp-route-id="@pregunta.Id"
+                           class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <a asp-action="Eliminar"
+                           asp-route-id="@pregunta.Id"
+                           class="btn btn-danger btn-sm">
+                            Eliminar
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

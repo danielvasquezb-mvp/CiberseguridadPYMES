@@ -1,0 +1,333 @@
+﻿@model CiberseguridadPYMES.Models.Diagnostico
+
+@{
+    ViewData["Title"] = "Detalle del diagnóstico";
+    var resultados = Model.ResultadosDimension
+        .OrderBy(r => r.Dimension?.Codigo)
+        .ToList();
+
+    var hallazgos = Model.Hallazgos
+        .OrderByDescending(h =>
+            h.Prioridad == "Alta" ? 3 :
+            h.Prioridad == "Media" ? 2 : 1)
+        .ToList();
+
+    int totalHallazgos = hallazgos.Count;
+    int hallazgosAltos = hallazgos.Count(h => h.Prioridad == "Alta");
+    int hallazgosMedios = hallazgos.Count(h => h.Prioridad == "Media");
+}
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div>
+            <h1>Diagnóstico de ciberseguridad</h1>
+            <p class="text-muted mb-0">
+                Resultados de la autoevaluación de la empresa.
+            </p>
+        </div>
+
+        <a asp-controller="Evaluacion"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            Volver a evaluaciones
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+
+    <!-- Información general -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Información de la evaluación</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <strong>Empresa:</strong>
+                    <p class="mb-0">
+                        @(Model.Evaluacion?.Empresa?.Nombre ?? "No disponible")
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Formulario:</strong>
+                    <p class="mb-0">
+                        @(Model.Evaluacion?.Formulario?.Nombre ?? "No disponible")
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Fecha de generación:</strong>
+                    <p class="mb-0">
+                        @Model.FechaGeneracion.ToString("dd/MM/yyyy HH:mm")
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Estado:</strong>
+                    <p class="mb-0">
+                        <span class="badge bg-success">Finalizada</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumen general -->
+    <h2 class="h4 mb-3">Resumen general</h2>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Cumplimiento general</h6>
+
+                    <div class="d-flex align-items-baseline gap-2">
+                        <span class="display-5 fw-bold">
+                            @Model.PorcentajeGeneral.ToString("0.##")%
+                        </span>
+                    </div>
+
+                    <div class="progress mt-3"
+                         role="progressbar"
+                         aria-label="Porcentaje de cumplimiento general"
+                         aria-valuenow="@Model.PorcentajeGeneral"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
+                        <div class="progress-bar"
+                             style="width: @(Math.Clamp(Model.PorcentajeGeneral, 0m, 100m).ToString(System.Globalization.CultureInfo.InvariantCulture))%">
+                        </div>
+                    </div>
+
+                    <p class="text-muted small mt-2 mb-0">
+                        El porcentaje se calcula excluyendo las respuestas
+                        marcadas como No aplica.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Hallazgos identificados</h6>
+
+                    <span class="display-5 fw-bold">
+                        @totalHallazgos
+                    </span>
+
+                    <div class="mt-3">
+                        <span class="badge bg-danger me-2">
+                            Alta: @hallazgosAltos
+                        </span>
+
+                        <span class="badge bg-warning text-dark">
+                            Media: @hallazgosMedios
+                        </span>
+                    </div>
+
+                    <p class="text-muted small mt-2 mb-0">
+                        Los hallazgos representan prácticas que requieren
+                        revisión o mejora.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Descripción del diagnóstico -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Interpretación del resultado</h5>
+        </div>
+
+        <div class="card-body">
+            <p class="mb-0">@Model.Resumen</p>
+
+            @if (Model.ResultadosDimension.Any() &&
+                 Model.ResultadosDimension.All(r => r.PreguntasAplicables == 0))
+            {
+                <div class="alert alert-warning mt-3 mb-0">
+                    Todas las preguntas se marcaron como No aplica.
+                    No existe una base aplicable para interpretar el porcentaje
+                    como una medida efectiva de cumplimiento.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Resultados por dimensión -->
+    <h2 class="h4 mb-3">Cumplimiento por dimensión</h2>
+
+    @if (resultados.Any())
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Dimensión</th>
+                            <th class="text-center">Preguntas aplicables</th>
+                            <th class="text-center">Cumplidas</th>
+                            <th style="min-width: 180px;">Cumplimiento</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var resultado in resultados)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>
+                                        @(resultado.Dimension?.Codigo ?? "")
+                                    </strong>
+                                    <br />
+                                    @(resultado.Dimension?.Nombre ?? "Dimensión no disponible")
+                                </td>
+
+                                <td class="text-center">
+                                    @resultado.PreguntasAplicables
+                                </td>
+
+                                <td class="text-center">
+                                    @resultado.PreguntasCumplidas
+                                </td>
+
+                                <td>
+                                    @if (resultado.PreguntasAplicables == 0)
+                                    {
+                                        <span class="text-muted">
+                                            Sin datos aplicables
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>
+                                                @resultado.PorcentajeCumplimiento.ToString("0.##")%
+                                            </span>
+                                        </div>
+
+                                        <div class="progress"
+                                             role="progressbar"
+                                             aria-label="Cumplimiento de dimensión"
+                                             aria-valuenow="@resultado.PorcentajeCumplimiento"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">
+                                            <div class="progress-bar"
+                                                 style="width: @(Math.Clamp(resultado.PorcentajeCumplimiento, 0m, 100m).ToString(System.Globalization.CultureInfo.InvariantCulture))%">
+                                            </div>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No hay resultados por dimensión disponibles.
+        </div>
+    }
+
+    <!-- Hallazgos -->
+    <h2 class="h4 mb-3">Hallazgos identificados</h2>
+
+    @if (hallazgos.Any())
+    {
+        <div class="accordion mb-4" id="acordeonHallazgos">
+            @for (int i = 0; i < hallazgos.Count; i++)
+            {
+                var hallazgo = hallazgos[i];
+                var encabezadoId = $"encabezado{i}";
+                var contenidoId = $"contenido{i}";
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="@encabezadoId">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#@contenidoId"
+                                aria-expanded="false"
+                                aria-controls="@contenidoId">
+
+                            <span class="me-2">
+                                @hallazgo.Pregunta?.Dimension?.Nombre
+                            </span>
+
+                            @if (hallazgo.Prioridad == "Alta")
+                            {
+                                <span class="badge bg-danger ms-auto me-2">
+                                    Alta
+                                </span>
+                            }
+                            else if (hallazgo.Prioridad == "Media")
+                            {
+                                <span class="badge bg-warning text-dark ms-auto me-2">
+                                    Media
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary ms-auto me-2">
+                                    @hallazgo.Prioridad
+                                </span>
+                            }
+                        </button>
+                    </h3>
+
+                    <div id="@contenidoId"
+                         class="accordion-collapse collapse"
+                         aria-labelledby="@encabezadoId"
+                         data-bs-parent="#acordeonHallazgos">
+
+                        <div class="accordion-body">
+                            <p>
+                                <strong>Pregunta evaluada:</strong><br />
+                                @(hallazgo.Pregunta?.Texto ?? "Pregunta no disponible")
+                            </p>
+
+                            <p class="mb-0">
+                                <strong>Descripción:</strong><br />
+                                @hallazgo.Descripcion
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success mb-4">
+            No se identificaron hallazgos a partir de las respuestas registradas.
+        </div>
+    }
+
+    <div class="d-flex justify-content-end">
+        <a asp-controller="Evaluacion"
+           asp-action="Index"
+           class="btn btn-primary">
+            Volver a evaluaciones
+        </a>
+    </div>
+
+</div>

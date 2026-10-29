@@ -1,0 +1,81 @@
+﻿
+@model IEnumerable<CiberseguridadPYMES.Models.TipoSistema>
+
+@{
+    ViewData["Title"] = "Tipos de sistemas";
+}
+
+<h1>Tipos de sistemas</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
+
+@if (User.IsInRole("Administrador"))
+{
+    <p>
+        <a asp-action="Crear" class="btn btn-primary">
+            Registrar tipo de sistema
+        </a>
+    </p>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No hay tipos de sistemas registrados.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var tipo in Model)
+        {
+            <tr>
+                <td>@tipo.Nombre</td>
+                <td>@tipo.Descripcion</td>
+                <td>
+                    <a asp-action="Detalles"
+                       asp-route-id="@tipo.Id"
+                       class="btn btn-info btn-sm">
+                        Detalles
+                    </a>
+
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a asp-action="Editar"
+                           asp-route-id="@tipo.Id"
+                           class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <a asp-action="Eliminar"
+                           asp-route-id="@tipo.Id"
+                           class="btn btn-danger btn-sm">
+                            Eliminar
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

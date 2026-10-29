@@ -1,0 +1,49 @@
+﻿@model CiberseguridadPYMES.Models.Pregunta
+
+@{
+    ViewData["Title"] = "Eliminar pregunta";
+}
+
+<h1>Eliminar pregunta</h1>
+
+<div class="alert alert-warning" role="alert">
+    <strong>Atención:</strong>
+    Confirma si deseas eliminar esta pregunta. Si tiene respuestas
+    o recomendaciones relacionadas, la base de datos puede impedir
+    la eliminación.
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Formulario</dt>
+            <dd class="col-sm-9">@Model.Formulario?.Nombre</dd>
+
+            <dt class="col-sm-3">Dimensión</dt>
+            <dd class="col-sm-9">@Model.Dimension?.Nombre</dd>
+
+            <dt class="col-sm-3">Pregunta</dt>
+            <dd class="col-sm-9">@Model.Texto</dd>
+
+            <dt class="col-sm-3">Orden</dt>
+            <dd class="col-sm-9">@Model.Orden</dd>
+        </dl>
+
+        <form asp-action="Eliminar"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <button type="submit" class="btn btn-danger">
+                Confirmar eliminación
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿
+@model CiberseguridadPYMES.Models.Dimension
+
+@{
+    ViewData["Title"] = "Detalles de la dimensión";
+}
+
+<h1>Detalles de la dimensión</h1>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Código</dt>
+            <dd class="col-sm-9">@Model.Codigo</dd>
+
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Descripción</dt>
+            <dd class="col-sm-9">
+                @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                    ? "Sin descripción"
+                    : Model.Descripcion)
+            </dd>
+        </dl>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Volver
+        </a>
+
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Editar"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                Editar
+            </a>
+        }
+    </div>
+</div>

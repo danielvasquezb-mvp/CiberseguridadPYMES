@@ -1,0 +1,19 @@
+# Archivos generados por .NET
+bin/
+obj/
+
+# Archivos de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Configuración local y secretos
+appsettings.Development.json
+.env
+.env.*
+
+# Archivos temporales y registros
+*.log
+
+# Configuración local
+appsettings.Development.json

@@ -1,0 +1,56 @@
+﻿
+@model CiberseguridadPYMES.Models.Empresa
+
+@{
+    ViewData["Title"] = "Editar empresa";
+}
+
+<h1>Editar empresa</h1>
+
+<form asp-action="Editar" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="ModelOnly"
+         class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label">
+            Nombre de la empresa
+        </label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Sector" class="form-label">
+            Sector económico
+        </label>
+        <select asp-for="Sector" class="form-select">
+            <option value="Comercio">Comercio</option>
+            <option value="Servicios">Servicios</option>
+            <option value="Otro">Otro</option>
+        </select>
+        <span asp-validation-for="Sector"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Municipio" class="form-label">
+            Municipio
+        </label>
+        <input asp-for="Municipio" class="form-control" />
+        <span asp-validation-for="Municipio"
+              class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Guardar cambios
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Cancelar
+    </a>
+</form>
