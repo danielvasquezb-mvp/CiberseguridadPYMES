@@ -5161,50 +5161,79 @@ textarea.form-control {
 
 /* SWITCH */
 
+/* Interruptor de estado de la pregunta */
 .question-switch {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 11px;
-    min-height: 43px;
-    color: #d8e0e9;
-    font-size: 12px;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 42px;
+    margin-top: 8px;
     cursor: pointer;
+    color: #F1F5F9;
+    font-size: 13px;
+    font-weight: 500;
+    position: relative;
 }
 
+    /* Ocultar checkbox original */
     .question-switch input {
         position: absolute;
         opacity: 0;
+        width: 0;
+        height: 0;
     }
 
+/* Fondo del interruptor */
 .question-switch-slider {
     position: relative;
-    width: 38px;
-    height: 21px;
-    background: #354252;
-    border-radius: 20px;
-    transition: .2s;
+    display: inline-block;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 23px;
+    background-color: #334155;
+    border: 1px solid #475569;
+    border-radius: 30px;
+    transition: background-color .25s ease;
 }
 
+    /* Círculo deslizante */
     .question-switch-slider::before {
         content: "";
         position: absolute;
-        top: 3px;
-        left: 3px;
-        width: 15px;
-        height: 15px;
-        background: #fff;
+        width: 17px;
+        height: 17px;
+        left: 2px;
+        top: 2px;
+        background-color: #FFFFFF;
         border-radius: 50%;
-        transition: .2s;
+        transition: transform .25s ease;
     }
 
+/* Estado activo */
 .question-switch input:checked + .question-switch-slider {
-    background: var(--accent);
+    background-color: #45E0B1;
+    border-color: #45E0B1;
 }
 
+    /* Movimiento del círculo */
     .question-switch input:checked + .question-switch-slider::before {
-        transform: translateX(17px);
-        background: #092018;
+        transform: translateX(19px);
     }
+
+/* Texto */
+.question-switch span:last-child {
+    display: inline-block;
+    position: static;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+/* Accesibilidad con teclado */
+.question-switch input:focus-visible + .question-switch-slider {
+    outline: 2px solid #8B7CFF;
+    outline-offset: 3px;
+}
 
 /* RECOMENDACIONES */
 
