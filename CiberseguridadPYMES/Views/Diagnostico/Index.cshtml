@@ -1,155 +1,254 @@
-﻿@model IEnumerable<CiberseguridadPYMES.Models.Diagnostico>
+﻿
+@model IEnumerable<CiberseguridadPYMES.Models.Diagnostico>
 
 @{
     ViewData["Title"] = "Diagnósticos";
-    var diagnosticos = Model.ToList();
+
+    var diagnosticos = Model
+        .OrderByDescending(d => d.FechaGeneracion)
+        .ToList();
+
+    int totalDiagnosticos = diagnosticos.Count;
+
+    decimal promedioCumplimiento = diagnosticos.Any()
+        ? diagnosticos.Average(d => d.PorcentajeGeneral)
+        : 0m;
+
+    int diagnosticosConHallazgos = diagnosticos.Count(d =>
+        d.Hallazgos != null && d.Hallazgos.Any());
+
+    decimal promedioLimitado = Math.Clamp(promedioCumplimiento, 0m, 100m);
 }
 
-<div class="container mt-4 mb-5">
+<div class="diagnostic-page">
 
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <!-- Encabezado -->
+    <div class="diagnostic-breadcrumb">
+        <a asp-controller="Evaluacion" asp-action="Index">Mis evaluaciones</a>
+        <span>/</span>
+        <span>Diagnósticos</span>
+    </div>
+
+    <div class="diagnostic-header">
         <div>
-            <h1>Diagnósticos</h1>
-            <p class="text-muted mb-0">
-                Consulta los resultados de tus evaluaciones de ciberseguridad.
+            <span class="diagnostic-eyebrow">CENTRO DE RESULTADOS</span>
+            <h1>Mis diagnósticos</h1>
+            <p>
+                Consulta el historial y los resultados de tus evaluaciones
+                de ciberseguridad.
             </p>
         </div>
 
-        <a asp-controller="Evaluacion"
-           asp-action="Index"
-           class="btn btn-outline-secondary">
-            Volver a evaluaciones
-        </a>
+        <div class="diagnostic-header-icon">◈</div>
     </div>
 
+    <!-- Mensajes -->
     @if (TempData["Mensaje"] != null)
     {
-        <div class="alert alert-success" role="alert">
+        <div class="diagnostic-alert diagnostic-alert-success">
+            <span>✓</span>
             @TempData["Mensaje"]
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger" role="alert">
+        <div class="diagnostic-alert diagnostic-alert-danger">
+            <span>!</span>
             @TempData["Error"]
         </div>
     }
 
-    <!-- Resumen -->
-    <div class="row g-3 mb-4">
+    <!-- Indicadores -->
+    <div class="diagnostic-section-title">
+        <span class="diagnostic-eyebrow">RESUMEN</span>
+        <h2>Indicadores generales</h2>
+        <p>Resumen de los diagnósticos asociados a tu cuenta.</p>
+    </div>
 
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Diagnósticos generados</h6>
-                    <p class="display-5 fw-bold mb-0">
-                        @diagnosticos.Count
-                    </p>
+    <div class="diagnostic-summary-grid">
+
+        <section class="diagnostic-score-card">
+            <div class="diagnostic-card-top">
+                <div>
+                    <span class="diagnostic-card-label">HISTORIAL</span>
+                    <h3>Diagnósticos generados</h3>
                 </div>
+                <div class="diagnostic-card-icon score-icon">▤</div>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Promedio de cumplimiento</h6>
+            <div class="diagnostic-history-value">
+                <strong>@totalDiagnosticos</strong>
+                <span>registros</span>
+            </div>
 
-                    @if (diagnosticos.Any())
-                    {
-                        <p class="display-5 fw-bold mb-0">
-                            @diagnosticos.Average(
-                                d => d.PorcentajeGeneral).ToString("0.##")%
-                        </p>
-                    }
-                    else
-                    {
-                        <p class="display-5 fw-bold mb-0">—</p>
-                    }
+            <p class="diagnostic-card-note">
+                Total de resultados disponibles para consulta.
+            </p>
+        </section>
+
+        <section class="diagnostic-score-card">
+            <div class="diagnostic-card-top">
+                <div>
+                    <span class="diagnostic-card-label">RESULTADO PROMEDIO</span>
+                    <h3>Promedio de cumplimiento</h3>
                 </div>
+                <div class="diagnostic-card-icon findings-icon">◉</div>
             </div>
-        </div>
+
+            <div class="diagnostic-history-value">
+                @if (diagnosticos.Any())
+                {
+                    <strong>@promedioCumplimiento.ToString("0.##")</strong>
+                    <span>%</span>
+                }
+                else
+                {
+                    <strong>—</strong>
+                }
+            </div>
+
+            @if (diagnosticos.Any())
+            {
+                <div class="diagnostic-progress-track">
+                    <div class="diagnostic-progress-fill"
+                         style="width: @promedioLimitado.ToString(System.Globalization.CultureInfo.InvariantCulture)%">
+                    </div>
+                </div>
+            }
+
+            <p class="diagnostic-card-note">
+                Promedio de cumplimiento de todos tus diagnósticos.
+            </p>
+        </section>
 
     </div>
 
-    <!-- Tabla de diagnósticos -->
-    <div class="card shadow-sm">
-
-        <div class="card-header">
-            <h5 class="mb-0">Historial de diagnósticos</h5>
+    <!-- Historial -->
+    <div class="diagnostic-history-heading">
+        <div>
+            <span class="diagnostic-eyebrow">REGISTROS</span>
+            <h2>Historial de diagnósticos</h2>
+            <p>Selecciona un registro para consultar sus resultados detallados.</p>
         </div>
 
-        @if (diagnosticos.Any())
-        {
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+        <span class="diagnostic-history-count">
+            @totalDiagnosticos @(totalDiagnosticos == 1 ? "diagnóstico" : "diagnósticos")
+        </span>
+    </div>
 
-                    <thead class="table-light">
+    @if (diagnosticos.Any())
+    {
+        <div class="diagnostic-history-table-wrapper">
+            <div class="table-responsive">
+                <table class="diagnostic-history-table">
+                    <thead>
                         <tr>
-                            <th>Empresa</th>
-                            <th>Formulario</th>
-                            <th>Fecha de generación</th>
-                            <th class="text-center">Cumplimiento</th>
-                            <th>Resumen</th>
-                            <th class="text-center">Acciones</th>
+                            <th>EMPRESA</th>
+                            <th>FORMULARIO</th>
+                            <th>FECHA</th>
+                            <th>CUMPLIMIENTO</th>
+                            <th>RESUMEN</th>
+                            <th class="text-end">ACCIÓN</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach (var diagnostico in diagnosticos)
                         {
+                            var porcentaje = Math.Clamp(
+                                diagnostico.PorcentajeGeneral, 0m, 100m);
+
                             <tr>
                                 <td>
-                                    @(diagnostico.Evaluacion?.Empresa?.Nombre
-                                        ?? "No disponible")
+                                    <div class="diagnostic-company-cell">
+                                        <div class="diagnostic-company-icon">▦</div>
+                                        <strong>
+                                            @(diagnostico.Evaluacion?.Empresa?.Nombre
+                                                ?? "No disponible")
+                                        </strong>
+                                    </div>
                                 </td>
 
                                 <td>
-                                    @(diagnostico.Evaluacion?.Formulario?.Nombre
-                                        ?? "No disponible")
+                                    <span class="diagnostic-form-name">
+                                        @(diagnostico.Evaluacion?.Formulario?.Nombre
+                                            ?? "No disponible")
+                                    </span>
                                 </td>
 
                                 <td>
-                                    @diagnostico.FechaGeneracion.ToString(
-                                        "dd/MM/yyyy HH:mm")
-                                </td>
-
-                                <td class="text-center">
-                                    <strong>
-                                        @diagnostico.PorcentajeGeneral.ToString("0.##")%
-                                    </strong>
+                                    <span class="diagnostic-date">
+                                        @diagnostico.FechaGeneracion.ToString("dd/MM/yyyy")
+                                    </span>
+                                    <small class="diagnostic-date-time">
+                                        @diagnostico.FechaGeneracion.ToString("HH:mm")
+                                    </small>
                                 </td>
 
                                 <td>
-                                    @diagnostico.Resumen
+                                    <div class="diagnostic-table-score">
+                                        <strong>
+                                            @diagnostico.PorcentajeGeneral.ToString("0.##")%
+                                        </strong>
+                                    </div>
+
+                                    <div class="diagnostic-table-progress">
+                                        <div style="width: @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%">
+                                        </div>
+                                    </div>
                                 </td>
 
-                                <td class="text-center">
+                                <td>
+                                    <span class="diagnostic-table-summary"
+                                          title="@diagnostico.Resumen">
+                                        @diagnostico.Resumen
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
                                     <a asp-controller="Diagnostico"
                                        asp-action="Detalles"
                                        asp-route-evaluacionId="@diagnostico.EvaluacionId"
-                                       class="btn btn-primary btn-sm">
+                                       class="diagnostic-view-button">
                                         Ver diagnóstico
+                                        <span>→</span>
                                     </a>
                                 </td>
                             </tr>
                         }
                     </tbody>
-
                 </table>
             </div>
-        }
-        else
-        {
-            <div class="card-body">
-                <div class="alert alert-info mb-0">
-                    Todavía no tienes diagnósticos generados.
-                    Finaliza una evaluación y genera su diagnóstico para
-                    consultar los resultados aquí.
-                </div>
-            </div>
-        }
+        </div>
+    }
+    else
+    {
+        <div class="diagnostic-history-empty">
+            <div class="diagnostic-empty-icon">◈</div>
 
+            <h3>Aún no tienes diagnósticos</h3>
+
+            <p>
+                Cuando finalices una evaluación y generes su diagnóstico,
+                podrás consultar aquí los resultados y las recomendaciones.
+            </p>
+
+            <a asp-controller="Evaluacion"
+               asp-action="Index"
+               class="btn btn-accent">
+                Ir a mis evaluaciones →
+            </a>
+        </div>
+    }
+
+    <!-- Acción inferior -->
+    <div class="diagnostic-bottom-actions">
+        <a asp-controller="Evaluacion"
+           asp-action="Index"
+           class="btn btn-outline-light">
+            ← Volver a evaluaciones
+        </a>
     </div>
 
 </div>

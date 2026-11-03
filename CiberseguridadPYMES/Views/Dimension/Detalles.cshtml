@@ -1,40 +1,76 @@
-﻿
-@model CiberseguridadPYMES.Models.Dimension
+﻿@model CiberseguridadPYMES.Models.Dimension
 
 @{
     ViewData["Title"] = "Detalles de la dimensión";
 }
 
-<h1>Detalles de la dimensión</h1>
+<div class="question-page">
 
-<div class="card">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Código</dt>
-            <dd class="col-sm-9">@Model.Codigo</dd>
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">
+                <i class="bi bi-layers"></i> CONFIGURACIÓN DE EVALUACIÓN
+            </span>
+            <h1 class="page-title">Detalles de la dimensión</h1>
+            <p class="page-description">
+                Consulta la información de esta área de evaluación.
+            </p>
+        </div>
+    </div>
 
-            <dt class="col-sm-3">Nombre</dt>
-            <dd class="col-sm-9">@Model.Nombre</dd>
+    <div class="question-detail-card">
+        <div class="question-detail-heading">
+            <div class="question-form-heading-icon">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+            <div>
+                <h2>@Model.Nombre</h2>
+                <p>Información general de la dimensión registrada.</p>
+            </div>
+        </div>
 
-            <dt class="col-sm-3">Descripción</dt>
-            <dd class="col-sm-9">
-                @(string.IsNullOrWhiteSpace(Model.Descripcion)
-                    ? "Sin descripción"
-                    : Model.Descripcion)
-            </dd>
-        </dl>
+        <div class="dimension-detail-code">
+            <span>CÓDIGO DE DIMENSIÓN</span>
+            <strong>@Model.Codigo</strong>
+        </div>
 
-        <a asp-action="Index" class="btn btn-secondary">
-            Volver
-        </a>
+        <div class="question-detail-grid">
+            <div class="question-detail-item full-width">
+                <span class="detail-label">
+                    <i class="bi bi-card-heading"></i>
+                    Nombre
+                </span>
+                <strong>@Model.Nombre</strong>
+            </div>
 
-        @if (User.IsInRole("Administrador"))
-        {
-            <a asp-action="Editar"
-               asp-route-id="@Model.Id"
-               class="btn btn-warning">
-                Editar
+            <div class="question-detail-item full-width">
+                <span class="detail-label">
+                    <i class="bi bi-text-paragraph"></i>
+                    Descripción
+                </span>
+                <p>
+                    @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                        ? "Sin descripción"
+                        : Model.Descripcion)
+                </p>
+            </div>
+        </div>
+
+        <div class="question-detail-actions">
+            <a asp-action="Index" class="btn-question-secondary">
+                <i class="bi bi-arrow-left"></i>
+                Volver
             </a>
-        }
+
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-action="Editar"
+                   asp-route-id="@Model.Id"
+                   class="btn-question-primary">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar dimensión
+                </a>
+            }
+        </div>
     </div>
 </div>

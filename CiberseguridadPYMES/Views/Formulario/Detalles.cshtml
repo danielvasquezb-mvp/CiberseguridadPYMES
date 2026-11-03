@@ -1,53 +1,92 @@
-﻿@model CiberseguridadPYMES.Models.Formulario
+﻿
+@model CiberseguridadPYMES.Models.Formulario
 
 @{
     ViewData["Title"] = "Detalles del formulario";
 }
 
-<h1>Detalles del formulario</h1>
+<div class="question-page">
 
-<div class="card">
-    <div class="card-header">
-        Información del formulario
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / FORMULARIOS</span>
+            <h1 class="page-title">Detalles del formulario</h1>
+            <p class="page-description">
+                Consulta la información y configuración del formulario.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
     </div>
 
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Nombre</dt>
-            <dd class="col-sm-9">@Model.Nombre</dd>
+    <div class="question-detail-card system-detail-container">
 
-            <dt class="col-sm-3">Versión</dt>
-            <dd class="col-sm-9">@Model.Version</dd>
+        <div class="question-detail-heading">
+            <div class="question-form-heading-icon">
+                <i class="bi bi-clipboard-check"></i>
+            </div>
 
-            <dt class="col-sm-3">Tipo de sistema</dt>
-            <dd class="col-sm-9">
-                @(Model.TipoSistema?.Nombre ?? "No especificado")
-            </dd>
+            <div>
+                <span class="section-eyebrow">FORMULARIO DE EVALUACIÓN</span>
+                <h2>@Model.Nombre</h2>
+                <p>Información general del formulario registrado.</p>
+            </div>
 
-            <dt class="col-sm-3">Estado</dt>
-            <dd class="col-sm-9">
+            <div class="question-detail-status">
                 @if (Model.Activo)
                 {
-                    <span class="badge bg-success">Activo</span>
+                    <span class="status-badge status-active">
+                        <span></span> Activo
+                    </span>
                 }
                 else
                 {
-                    <span class="badge bg-secondary">Inactivo</span>
+                    <span class="status-badge status-inactive">
+                        <span></span> Inactivo
+                    </span>
                 }
-            </dd>
-        </dl>
+            </div>
+        </div>
 
-        <a asp-action="Index" class="btn btn-secondary">
-            Volver
-        </a>
+        <div class="question-detail-grid">
+            <div class="question-detail-item">
+                <span><i class="bi bi-card-text"></i> Nombre</span>
+                <strong>@Model.Nombre</strong>
+            </div>
 
-        @if (User.IsInRole("Administrador"))
-        {
-            <a asp-action="Editar"
-               asp-route-id="@Model.Id"
-               class="btn btn-warning">
-                Editar
+            <div class="question-detail-item">
+                <span><i class="bi bi-tag"></i> Versión</span>
+                <strong>v@Model.Version</strong>
+            </div>
+
+            <div class="question-detail-item">
+                <span><i class="bi bi-pc-display"></i> Tipo de sistema</span>
+                <strong>@(Model.TipoSistema?.Nombre ?? "No especificado")</strong>
+            </div>
+
+            <div class="question-detail-item">
+                <span><i class="bi bi-toggle-on"></i> Estado</span>
+                <strong>@(Model.Activo ? "Activo" : "Inactivo")</strong>
+            </div>
+        </div>
+
+        <div class="question-detail-actions">
+            <a asp-action="Index" class="btn-question-secondary">
+                Volver a formularios
             </a>
-        }
+
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-action="Editar"
+                   asp-route-id="@Model.Id"
+                   class="btn-question-primary">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar formulario
+                </a>
+            }
+        </div>
     </div>
 </div>

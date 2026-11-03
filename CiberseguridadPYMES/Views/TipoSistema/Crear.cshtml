@@ -1,41 +1,76 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Registrar tipo de sistema";
 }
 
-<h1>Registrar tipo de sistema</h1>
+<div class="question-page">
 
-<form asp-action="Crear" method="post">
-    @Html.AntiForgeryToken()
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / CATÁLOGOS</span>
+            <h1 class="page-title">Registrar tipo de sistema</h1>
+            <p class="page-description">
+                Agrega una categoría para clasificar los sistemas evaluados.
+            </p>
+        </div>
 
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-    <div class="mb-3">
-        <label for="nombre" class="form-label">
-            Nombre
-        </label>
-        <input id="nombre"
-               name="nombre"
-               class="form-control"
-               value="@ViewData["Nombre"]"
-               required />
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
     </div>
 
-    <div class="mb-3">
-        <label for="descripcion" class="form-label">
-            Descripción
-        </label>
-        <textarea id="descripcion"
-                  name="descripcion"
-                  class="form-control"
-                  rows="3">@ViewData["Descripcion"]</textarea>
+    <div class="question-form-card system-form-container">
+
+        <div class="question-form-heading">
+            <div class="question-form-icon violet">
+                <i class="bi bi-hdd-stack"></i>
+            </div>
+            <div>
+                <h5>Información del tipo de sistema</h5>
+                <p>Completa los datos para registrar una nueva categoría.</p>
+            </div>
+        </div>
+
+        <form asp-action="Crear" method="post">
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="All" class="question-validation"></div>
+            }
+
+            <div class="question-form-grid">
+                <div class="question-field full">
+                    <label for="nombre">Nombre del tipo de sistema</label>
+                    <input id="nombre"
+                           name="nombre"
+                           class="form-control"
+                           value="@ViewData["Nombre"]"
+                           maxlength="150"
+                           placeholder="Ej. Sistema de facturación"
+                           required />
+                    <small>Utiliza un nombre claro que permita identificar la categoría.</small>
+                </div>
+
+                <div class="question-field full">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion"
+                              name="descripcion"
+                              class="form-control"
+                              rows="4"
+                              maxlength="1000"
+                              placeholder="Describe brevemente qué tipo de sistemas comprende esta categoría.">@ViewData["Descripcion"]</textarea>
+                </div>
+            </div>
+
+            <div class="question-form-actions">
+                <a asp-action="Index" class="btn-question-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn-question-primary">
+                    <i class="bi bi-check-lg"></i>
+                    Guardar tipo de sistema
+                </button>
+            </div>
+        </form>
     </div>
-
-    <button type="submit" class="btn btn-primary">
-        Guardar
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Cancelar
-    </a>
-</form>
+</div>

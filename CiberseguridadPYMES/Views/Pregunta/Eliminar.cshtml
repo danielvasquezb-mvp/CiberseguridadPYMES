@@ -4,46 +4,77 @@
     ViewData["Title"] = "Eliminar pregunta";
 }
 
-<h1>Eliminar pregunta</h1>
+<div class="question-page">
 
-<div class="alert alert-warning" role="alert">
-    <strong>Atención:</strong>
-    Confirma si deseas eliminar esta pregunta. Si tiene respuestas
-    o recomendaciones relacionadas, la base de datos puede impedir
-    la eliminación.
-</div>
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / PREGUNTAS</span>
+            <h1 class="page-title">Eliminar pregunta</h1>
+            <p class="page-description">
+                Revisa la información antes de confirmar esta operación.
+            </p>
+        </div>
+    </div>
 
-<div class="card">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Formulario</dt>
-            <dd class="col-sm-9">@Model.Formulario?.Nombre</dd>
+    <div class="question-delete-card">
 
-            <dt class="col-sm-3">Dimensión</dt>
-            <dd class="col-sm-9">@Model.Dimension?.Nombre</dd>
+        <div class="question-delete-heading">
+            <div class="question-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
 
-            <dt class="col-sm-3">Pregunta</dt>
-            <dd class="col-sm-9">@Model.Texto</dd>
+            <div>
+                <h4>¿Deseas eliminar esta pregunta?</h4>
+                <p>
+                    Esta acción puede afectar la información relacionada con la pregunta.
+                </p>
+            </div>
+        </div>
 
-            <dt class="col-sm-3">Orden</dt>
-            <dd class="col-sm-9">@Model.Orden</dd>
-        </dl>
+        <div class="question-delete-warning">
+            <i class="bi bi-info-circle"></i>
+            <span>
+                Si la pregunta tiene respuestas históricas o recomendaciones
+                relacionadas, la base de datos puede impedir su eliminación.
+            </span>
+        </div>
+
+        <div class="question-delete-info">
+            <div>
+                <span>Formulario</span>
+                <strong>@Model.Formulario?.Nombre</strong>
+            </div>
+
+            <div>
+                <span>Dimensión</span>
+                <strong>@Model.Dimension?.Nombre</strong>
+            </div>
+
+            <div>
+                <span>Orden</span>
+                <strong>@Model.Orden</strong>
+            </div>
+
+            <div class="full">
+                <span>Texto de la pregunta</span>
+                <strong>@Model.Texto</strong>
+            </div>
+        </div>
 
         <form asp-action="Eliminar"
               asp-route-id="@Model.Id"
-              method="post">
-
-            @Html.AntiForgeryToken()
+              method="post"
+              class="question-delete-actions">
 
             <input type="hidden" name="id" value="@Model.Id" />
 
-            <button type="submit" class="btn btn-danger">
-                Confirmar eliminación
-            </button>
-
-            <a asp-action="Index" class="btn btn-secondary">
+            <a asp-action="Index" class="btn-question-secondary">
                 Cancelar
             </a>
+
+            <button type="submit" class="btn-question-danger">
+                <i class="bi bi-trash3"></i> Confirmar eliminación
+            </button>
         </form>
     </div>
 </div>

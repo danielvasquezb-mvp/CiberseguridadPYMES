@@ -1,32 +1,59 @@
-﻿
-@model CiberseguridadPYMES.Models.Empresa
+﻿@model CiberseguridadPYMES.Models.Empresa
 
 @{
     ViewData["Title"] = "Eliminar empresa";
 }
 
-<h1>Eliminar empresa</h1>
-
-<div class="alert alert-warning">
-    ¿Estás seguro de que deseas eliminar esta empresa?
-</div>
-
-<div class="card mb-3">
-    <div class="card-body">
-        <p><strong>Nombre:</strong> @Model.Nombre</p>
-        <p><strong>Sector:</strong> @Model.Sector</p>
-        <p><strong>Municipio:</strong> @Model.Municipio</p>
+<div class="page-header mb-4">
+    <div>
+        <span class="section-eyebrow">GESTIÓN EMPRESARIAL</span>
+        <h1 class="page-title">Eliminar empresa</h1>
+        <p class="page-description">
+            Revisa la información antes de confirmar esta operación.
+        </p>
+    </div>
+    <div class="page-icon danger-icon">
+        <i class="bi bi-trash3"></i>
     </div>
 </div>
 
-<form asp-action="Eliminar" asp-route-id="@Model.Id" method="post">
-    @Html.AntiForgeryToken()
+<div class="delete-card">
+    <div class="delete-icon">
+        <i class="bi bi-exclamation-triangle"></i>
+    </div>
 
-    <button type="submit" class="btn btn-danger">
-        Confirmar eliminación
-    </button>
+    <h4>¿Deseas eliminar esta empresa?</h4>
+    <p class="delete-description">
+        Esta acción puede afectar la información relacionada con sus evaluaciones.
+        Verifica los datos antes de continuar.
+    </p>
 
-    <a asp-action="Index" class="btn btn-secondary">
-        Cancelar
-    </a>
-</form>
+    <div class="delete-company-info">
+        <div>
+            <span>Nombre</span>
+            <strong>@Model.Nombre</strong>
+        </div>
+        <div>
+            <span>Sector económico</span>
+            <strong>@Model.Sector</strong>
+        </div>
+        <div>
+            <span>Municipio</span>
+            <strong>@Model.Municipio</strong>
+        </div>
+    </div>
+
+    <form asp-action="Eliminar" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn btn-outline-light">
+                Cancelar
+            </a>
+            <button type="submit" class="btn btn-danger-action">
+                <i class="bi bi-trash3 me-2"></i>
+                Confirmar eliminación
+            </button>
+        </div>
+    </form>
+</div>

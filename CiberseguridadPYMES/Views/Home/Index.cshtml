@@ -1,8 +1,275 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="home-hero">
+
+    <div class="hero-content">
+
+        <div class="hero-tag">
+            <span class="hero-tag-dot"></span>
+            PLATAFORMA DE CIBERSEGURIDAD PARA PYMES
+        </div>
+
+        <h1>
+            Conoce el nivel de
+            <span class="gradient-text">ciberseguridad</span>
+            de tu empresa.
+        </h1>
+
+        <p class="hero-description">
+            Evalúa las prácticas de seguridad de tu organización,
+            identifica oportunidades de mejora y obtén un diagnóstico
+            que te ayude a proteger tus sistemas y tu información.
+        </p>
+
+        <div class="hero-actions">
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Empresa"
+                   asp-action="Index"
+                   class="hero-button hero-button-primary">
+                    Explorar empresas
+                    <span>→</span>
+                </a>
+
+                <a asp-controller="Evaluacion"
+                   asp-action="Index"
+                   class="hero-button hero-button-secondary">
+                    Consultar evaluaciones
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account"
+                   asp-action="Register"
+                   class="hero-button hero-button-primary">
+                    Comenzar ahora
+                    <span>→</span>
+                </a>
+
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="hero-button hero-button-secondary">
+                    Iniciar sesión
+                </a>
+            }
+
+        </div>
+
+        <div class="hero-trust">
+            <span class="trust-icon">✓</span>
+            <span>Evaluación estructurada</span>
+
+            <span class="trust-separator"></span>
+
+            <span class="trust-icon">✓</span>
+            <span>Diagnóstico de seguridad</span>
+        </div>
+
+    </div>
+
+    <div class="hero-visual">
+
+        <div class="visual-glow"></div>
+
+        <div class="visual-circle visual-circle-outer"></div>
+        <div class="visual-circle visual-circle-inner"></div>
+
+        <div class="security-card">
+
+            <div class="security-card-header">
+                <span class="security-card-label">
+                    <span class="status-dot"></span>
+                    SEGURIDAD DIGITAL
+                </span>
+
+                <span class="security-card-menu">•••</span>
+            </div>
+
+            <div class="security-shield">
+
+                <svg viewBox="0 0 120 130"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none">
+
+                    <path d="M60 7L105 25V57C105 87 86 111 60 123C34 111 15 87 15 57V25L60 7Z"
+                          stroke="#45E0B1"
+                          stroke-width="3"
+                          fill="rgba(69,224,177,0.08)" />
+
+                    <path d="M40 64L53 77L81 47"
+                          stroke="#45E0B1"
+                          stroke-width="5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round" />
+
+                </svg>
+
+            </div>
+
+            <div class="security-card-title">
+                Protección y confianza
+            </div>
+
+            <div class="security-card-description">
+                Evalúa, identifica y mejora
+            </div>
+
+            <div class="security-card-divider"></div>
+
+            <div class="security-card-footer">
+                <span>Diagnóstico empresarial</span>
+                <span class="footer-check">✓</span>
+            </div>
+
+        </div>
+
+        <div class="floating-element floating-top">
+            <span class="floating-icon purple-icon">⌘</span>
+            <div>
+                <strong>Gestión de riesgos</strong>
+                <small>Identificación y análisis</small>
+            </div>
+        </div>
+
+        <div class="floating-element floating-bottom">
+            <span class="floating-icon green-icon">✓</span>
+            <div>
+                <strong>Evaluación digital</strong>
+                <small>Cuestionario estructurado</small>
+            </div>
+        </div>
+
+        <div class="visual-decoration decoration-one"></div>
+        <div class="visual-decoration decoration-two"></div>
+
+    </div>
+
+</section>
+
+
+<section class="home-dimensions">
+
+    <div class="section-heading">
+        <div>
+            <span class="section-eyebrow">NUESTRO ENFOQUE</span>
+
+            <h2>
+                ¿Qué aspectos de seguridad evaluamos?
+            </h2>
+
+            <p>
+                La plataforma organiza la evaluación en siete dimensiones
+                que permiten analizar diferentes prácticas de ciberseguridad.
+            </p>
+        </div>
+
+        <div class="section-counter">
+            <strong>07</strong>
+            <span>Dimensiones</span>
+        </div>
+    </div>
+
+
+    <div class="dimensions-grid">
+
+        <article class="dimension-card">
+            <div class="dimension-icon icon-green">01</div>
+            <h3>Gestión de accesos</h3>
+            <p>
+                Cuentas de usuario, permisos y control de acceso
+                a los sistemas de la empresa.
+            </p>
+        </article>
+
+        <article class="dimension-card">
+            <div class="dimension-icon icon-purple">02</div>
+            <h3>Protección de equipos</h3>
+            <p>
+                Actualizaciones, herramientas antimalware
+                y medidas de protección de dispositivos.
+            </p>
+        </article>
+
+        <article class="dimension-card">
+            <div class="dimension-icon icon-blue">03</div>
+            <h3>Copias de seguridad</h3>
+            <p>
+                Frecuencia, protección y recuperación
+                de las copias de seguridad.
+            </p>
+        </article>
+
+        <article class="dimension-card">
+            <div class="dimension-icon icon-orange">04</div>
+            <h3>Protección de la información</h3>
+            <p>
+                Controles para proteger la información
+                empresarial y restringir su acceso.
+            </p>
+        </article>
+
+        <article class="dimension-card">
+            <div class="dimension-icon icon-blue">05</div>
+            <h3>Redes y servicios digitales</h3>
+            <p>
+                Configuración segura de redes, conexiones
+                y servicios digitales.
+            </p>
+        </article>
+
+        <article class="dimension-card">
+            <div class="dimension-icon icon-purple">06</div>
+            <h3>Gestión de incidentes</h3>
+            <p>
+                Identificación, registro y respuesta
+                ante incidentes de seguridad.
+            </p>
+        </article>
+
+        <article class="dimension-card dimension-card-last">
+            <div class="dimension-icon icon-green">07</div>
+            <h3>Gestión de riesgos</h3>
+            <p>
+                Identificación de amenazas, valoración
+                de riesgos y medidas de tratamiento.
+            </p>
+        </article>
+
+    </div>
+
+</section>
+
+
+<section class="home-bottom-cta">
+
+    <div>
+        <span class="section-eyebrow">DA EL SIGUIENTE PASO</span>
+        <h2>La seguridad de tu empresa comienza con una evaluación.</h2>
+        <p>
+            Identifica el estado actual de tus prácticas de ciberseguridad
+            y descubre qué aspectos puedes fortalecer.
+        </p>
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a asp-controller="Evaluacion"
+           asp-action="Index"
+           class="hero-button hero-button-primary">
+            Ir a evaluaciones →
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Account"
+           asp-action="Register"
+           class="hero-button hero-button-primary">
+            Crear una cuenta →
+        </a>
+    }
+
+</section>

@@ -1,83 +1,194 @@
-﻿
-@model IEnumerable<CiberseguridadPYMES.Models.Dimension>
+﻿@model IEnumerable<CiberseguridadPYMES.Models.Dimension>
 
 @{
     ViewData["Title"] = "Dimensiones";
 }
 
-<h1>Dimensiones de evaluación</h1>
+<div class="question-page">
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["Mensaje"]
-    </div>
-}
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">
+                <i class="bi bi-layers"></i> CONFIGURACIÓN DE EVALUACIÓN
+            </span>
+            <h1 class="page-title">Dimensiones de evaluación</h1>
+            <p class="page-description">
+                Administra las dimensiones que organizan los aspectos de ciberseguridad evaluados en la plataforma.
+            </p>
+        </div>
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-warning">
-        @TempData["Error"]
-    </div>
-}
-
-@if (User.IsInRole("Administrador"))
-{
-    <p>
-        <a asp-action="Crear" class="btn btn-primary">
-            Registrar dimensión
-        </a>
-    </p>
-}
-
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        No hay dimensiones registradas.
-    </div>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var dimension in Model)
+        @if (User.IsInRole("Administrador"))
         {
-            <tr>
-                <td>@dimension.Codigo</td>
-                <td>@dimension.Nombre</td>
-                <td>@dimension.Descripcion</td>
-                <td>
-                    <a asp-action="Detalles"
-                       asp-route-id="@dimension.Id"
-                       class="btn btn-info btn-sm">
-                        Detalles
-                    </a>
-
-                    @if (User.IsInRole("Administrador"))
-                    {
-                        <a asp-action="Editar"
-                           asp-route-id="@dimension.Id"
-                           class="btn btn-warning btn-sm">
-                            Editar
-                        </a>
-
-                        <a asp-action="Eliminar"
-                           asp-route-id="@dimension.Id"
-                           class="btn btn-danger btn-sm">
-                            Eliminar
-                        </a>
-                    }
-                </td>
-            </tr>
+            <a asp-action="Crear" class="btn-question-primary">
+                <i class="bi bi-plus-lg"></i>
+                Registrar dimensión
+            </a>
         }
-        </tbody>
-    </table>
-}
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="question-alert question-alert-success">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="question-alert question-alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            @TempData["Error"]
+        </div>
+    }
+
+    @{
+        var dimensiones = Model.ToList();
+    }
+
+    <div class="question-stats">
+        <div class="question-stat-card">
+            <div class="question-stat-icon">
+                <i class="bi bi-layers"></i>
+            </div>
+            <div>
+                <span>Total de dimensiones</span>
+                <strong>@dimensiones.Count</strong>
+            </div>
+        </div>
+
+        <div class="question-stat-card">
+            <div class="question-stat-icon purple">
+                <i class="bi bi-shield-check"></i>
+            </div>
+            <div>
+                <span>Áreas de evaluación</span>
+                <strong>7</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-table-card">
+        <div class="question-table-heading">
+            <div>
+                <h2>Dimensiones registradas</h2>
+                <p>Consulta los códigos, nombres y descripciones de cada dimensión.</p>
+            </div>
+
+            <div class="question-search">
+                <i class="bi bi-search"></i>
+                <input type="text"
+                       id="buscarDimension"
+                       placeholder="Buscar dimensión..."
+                       autocomplete="off" />
+            </div>
+        </div>
+
+        @if (!dimensiones.Any())
+        {
+            <div class="question-empty">
+                <i class="bi bi-layers"></i>
+                <h3>No hay dimensiones registradas</h3>
+                <p>Cuando registres dimensiones, aparecerán en esta sección.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="question-table" id="tablaDimensiones">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre de la dimensión</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var dimension in dimensiones)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="dimension-code">
+                                        @dimension.Codigo
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="dimension-name">
+                                        <div class="dimension-icon">
+                                            <i class="bi bi-shield-lock"></i>
+                                        </div>
+                                        <strong>@dimension.Nombre</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="dimension-description">
+                                        @(string.IsNullOrWhiteSpace(dimension.Descripcion)
+                                            ? "Sin descripción"
+                                            : dimension.Descripcion)
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="question-actions">
+                                        <a asp-action="Detalles"
+                                           asp-route-id="@dimension.Id"
+                                           class="question-action-btn"
+                                           title="Ver detalles">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        @if (User.IsInRole("Administrador"))
+                                        {
+                                            <a asp-action="Editar"
+                                               asp-route-id="@dimension.Id"
+                                               class="question-action-btn edit"
+                                               title="Editar">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+
+                                            <a asp-action="Eliminar"
+                                               asp-route-id="@dimension.Id"
+                                               class="question-action-btn delete"
+                                               title="Eliminar">
+                                                <i class="bi bi-trash3"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div id="sinResultadosDimension" class="question-no-results" style="display:none;">
+                    <i class="bi bi-search"></i>
+                    No se encontraron dimensiones con ese criterio.
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buscador = document.getElementById("buscarDimension");
+        const tabla = document.getElementById("tablaDimensiones");
+        const mensaje = document.getElementById("sinResultadosDimension");
+
+        if (!buscador || !tabla) return;
+
+        buscador.addEventListener("input", function () {
+            const filtro = this.value.toLowerCase().trim();
+            const filas = tabla.querySelectorAll("tbody tr");
+            let visibles = 0;
+
+            filas.forEach(fila => {
+                const coincide = fila.textContent.toLowerCase().includes(filtro);
+                fila.style.display = coincide ? "" : "none";
+                if (coincide) visibles++;
+            });
+
+            mensaje.style.display = visibles === 0 ? "block" : "none";
+        });
+    });
+</script>

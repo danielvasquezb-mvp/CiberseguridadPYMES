@@ -1,40 +1,69 @@
-﻿@model CiberseguridadPYMES.Models.Formulario
+﻿
+@model CiberseguridadPYMES.Models.Formulario
 
 @{
     ViewData["Title"] = "Eliminar formulario";
 }
 
-<h1>Eliminar formulario</h1>
+<div class="question-page">
 
-<div class="alert alert-warning" role="alert">
-    <strong>Atención:</strong>
-    ¿Estás seguro de que deseas eliminar este formulario?
-    Esta acción puede estar impedida si existen preguntas o evaluaciones relacionadas.
-</div>
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / FORMULARIOS</span>
+            <h1 class="page-title">Eliminar formulario</h1>
+            <p class="page-description">
+                Revisa la información antes de confirmar esta operación.
+            </p>
+        </div>
 
-<div class="card">
-    <div class="card-header">
-        Confirmar eliminación
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
     </div>
 
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Nombre</dt>
-            <dd class="col-sm-9">@Model.Nombre</dd>
+    <div class="question-delete-card system-delete-container">
 
-            <dt class="col-sm-3">Versión</dt>
-            <dd class="col-sm-9">@Model.Version</dd>
+        <div class="question-delete-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
 
-            <dt class="col-sm-3">Tipo de sistema</dt>
-            <dd class="col-sm-9">
-                @(Model.TipoSistema?.Nombre ?? "No especificado")
-            </dd>
+        <div class="question-delete-heading">
+            <h2>¿Eliminar este formulario?</h2>
+            <p>
+                Esta acción puede estar impedida si existen preguntas o evaluaciones relacionadas.
+                Verifica los datos antes de continuar.
+            </p>
+        </div>
 
-            <dt class="col-sm-3">Estado</dt>
-            <dd class="col-sm-9">
-                @(Model.Activo ? "Activo" : "Inactivo")
-            </dd>
-        </dl>
+        <div class="question-delete-info">
+            <div>
+                <span>Nombre</span>
+                <strong>@Model.Nombre</strong>
+            </div>
+
+            <div>
+                <span>Versión</span>
+                <strong>v@Model.Version</strong>
+            </div>
+
+            <div>
+                <span>Tipo de sistema</span>
+                <strong>@(Model.TipoSistema?.Nombre ?? "No especificado")</strong>
+            </div>
+
+            <div>
+                <span>Estado</span>
+                <strong>@(Model.Activo ? "Activo" : "Inactivo")</strong>
+            </div>
+        </div>
+
+        <div class="question-delete-warning">
+            <i class="bi bi-info-circle"></i>
+            <span>
+                Si el formulario tiene registros relacionados, el sistema puede impedir su eliminación.
+            </span>
+        </div>
 
         <form asp-action="Eliminar"
               asp-route-id="@Model.Id"
@@ -44,13 +73,16 @@
 
             <input type="hidden" name="id" value="@Model.Id" />
 
-            <button type="submit" class="btn btn-danger">
-                Confirmar eliminación
-            </button>
+            <div class="question-form-actions">
+                <a asp-action="Index" class="btn-question-secondary">
+                    Cancelar
+                </a>
 
-            <a asp-action="Index" class="btn btn-secondary">
-                Cancelar
-            </a>
+                <button type="submit" class="btn-question-danger">
+                    <i class="bi bi-trash3"></i>
+                    Confirmar eliminación
+                </button>
+            </div>
         </form>
     </div>
 </div>

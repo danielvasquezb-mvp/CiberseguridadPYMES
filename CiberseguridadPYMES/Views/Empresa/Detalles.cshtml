@@ -1,30 +1,68 @@
-﻿
-@model CiberseguridadPYMES.Models.Empresa
+﻿@model CiberseguridadPYMES.Models.Empresa
 
 @{
     ViewData["Title"] = "Detalles de la empresa";
 }
 
-<h1>Detalles de la empresa</h1>
+<div class="page-header mb-4">
+    <div>
+        <span class="section-eyebrow">GESTIÓN EMPRESARIAL</span>
+        <h1 class="page-title">Detalles de la empresa</h1>
+        <p class="page-description">
+            Consulta la información general de la organización registrada.
+        </p>
+    </div>
+    <div class="page-icon">
+        <i class="bi bi-building"></i>
+    </div>
+</div>
 
-<div class="card">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Nombre</dt>
-            <dd class="col-sm-9">@Model.Nombre</dd>
+<div class="detail-card">
+    <div class="detail-card-header">
+        <div class="company-avatar">
+            <i class="bi bi-buildings"></i>
+        </div>
+        <div>
+            <h4>@Model.Nombre</h4>
+            <span class="status-indicator">
+                <span></span> Empresa registrada
+            </span>
+        </div>
+    </div>
 
-            <dt class="col-sm-3">Sector</dt>
-            <dd class="col-sm-9">@Model.Sector</dd>
+    <div class="detail-grid">
+        <div class="detail-item">
+            <span class="detail-label">
+                <i class="bi bi-building me-2"></i>Nombre
+            </span>
+            <strong>@Model.Nombre</strong>
+        </div>
 
-            <dt class="col-sm-3">Municipio</dt>
-            <dd class="col-sm-9">@Model.Municipio</dd>
-        </dl>
+        <div class="detail-item">
+            <span class="detail-label">
+                <i class="bi bi-briefcase me-2"></i>Sector económico
+            </span>
+            <strong>@Model.Sector</strong>
+        </div>
 
+        <div class="detail-item">
+            <span class="detail-label">
+                <i class="bi bi-geo-alt me-2"></i>Municipio
+            </span>
+            <strong>@Model.Municipio</strong>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <a asp-action="Index" class="btn btn-outline-light">
+            <i class="bi bi-arrow-left me-2"></i>
+            Volver
+        </a>
         <a asp-action="Editar"
            asp-route-id="@Model.Id"
-           class="btn btn-warning">Editar</a>
-
-        <a asp-action="Index"
-           class="btn btn-secondary">Volver</a>
+           class="btn btn-accent">
+            <i class="bi bi-pencil me-2"></i>
+            Editar información
+        </a>
     </div>
 </div>

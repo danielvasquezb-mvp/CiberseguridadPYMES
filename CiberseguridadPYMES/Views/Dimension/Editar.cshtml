@@ -4,65 +4,84 @@
     ViewData["Title"] = "Editar dimensión";
 }
 
-<h1>Editar dimensión</h1>
+<div class="question-page">
 
-<div class="card">
-    <div class="card-body">
-        <form asp-action="Editar"
-              asp-route-id="@Model.Id"
-              method="post">
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">
+                <i class="bi bi-layers"></i> CONFIGURACIÓN DE EVALUACIÓN
+            </span>
+            <h1 class="page-title">Editar dimensión</h1>
+            <p class="page-description">
+                Actualiza la información de la dimensión seleccionada.
+            </p>
+        </div>
+    </div>
 
-            @Html.AntiForgeryToken()
-
-            <input type="hidden" name="id" value="@Model.Id" />
-
-            <div asp-validation-summary="All"
-                 class="text-danger mb-3"></div>
-
-            <div class="mb-3">
-                <label for="codigo" class="form-label">
-                    Código
-                </label>
-
-                <input id="codigo"
-                       name="codigo"
-                       class="form-control"
-                       value="@Model.Codigo"
-                       maxlength="10"
-                       required />
+    <div class="question-form-container">
+        <div class="question-form-card">
+            <div class="question-form-heading">
+                <div class="question-form-heading-icon purple">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div>
+                    <h2>Modificar información</h2>
+                    <p>Realiza los cambios necesarios y guarda la información.</p>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="nombre" class="form-label">
-                    Nombre de la dimensión
-                </label>
+            <form asp-action="Editar"
+                  asp-route-id="@Model.Id"
+                  method="post">
 
-                <input id="nombre"
-                       name="nombre"
-                       class="form-control"
-                       value="@Model.Nombre"
-                       maxlength="150"
-                       required />
-            </div>
+                @Html.AntiForgeryToken()
 
-            <div class="mb-3">
-                <label for="descripcion" class="form-label">
-                    Descripción
-                </label>
+                <input type="hidden" name="id" value="@Model.Id" />
 
-                <textarea id="descripcion"
-                          name="descripcion"
-                          class="form-control"
-                          rows="4">@Model.Descripcion</textarea>
-            </div>
+                <div asp-validation-summary="ModelOnly" class="question-validation"></div>
 
-            <button type="submit" class="btn btn-primary">
-                Guardar cambios
-            </button>
+                <div class="question-form-grid">
+                    <div class="question-field">
+                        <label for="codigo">Código</label>
+                        <input id="codigo"
+                               name="codigo"
+                               class="question-input"
+                               value="@Model.Codigo"
+                               maxlength="10"
+                               required />
+                    </div>
 
-            <a asp-action="Index" class="btn btn-secondary">
-                Cancelar
-            </a>
-        </form>
+                    <div class="question-field">
+                        <label for="nombre">Nombre de la dimensión</label>
+                        <input id="nombre"
+                               name="nombre"
+                               class="question-input"
+                               value="@Model.Nombre"
+                               maxlength="150"
+                               required />
+                    </div>
+
+                    <div class="question-field full-width">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion"
+                                  name="descripcion"
+                                  class="question-input question-textarea"
+                                  rows="5">@Model.Descripcion</textarea>
+                    </div>
+                </div>
+
+                <div class="question-form-actions">
+                    <button type="submit" class="btn-question-primary">
+                        <i class="bi bi-save"></i>
+                        Guardar cambios
+                    </button>
+
+                    <a asp-action="Index" class="btn-question-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

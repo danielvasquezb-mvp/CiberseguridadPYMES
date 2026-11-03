@@ -1,31 +1,76 @@
-﻿
-@model CiberseguridadPYMES.Models.TipoSistema
+﻿@model CiberseguridadPYMES.Models.TipoSistema
 
 @{
     ViewData["Title"] = "Eliminar tipo de sistema";
 }
 
-<h1>Eliminar tipo de sistema</h1>
+<div class="question-page">
 
-<div class="alert alert-warning">
-    ¿Estás seguro de que deseas eliminar este tipo de sistema?
-</div>
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / CATÁLOGOS</span>
+            <h1 class="page-title">Eliminar tipo de sistema</h1>
+            <p class="page-description">
+                Verifica el registro antes de confirmar la eliminación.
+            </p>
+        </div>
+    </div>
 
-<div class="card mb-3">
-    <div class="card-body">
-        <p><strong>Nombre:</strong> @Model.Nombre</p>
-        <p><strong>Descripción:</strong> @Model.Descripcion</p>
+    <div class="question-delete-card">
+
+        <div class="question-delete-heading">
+            <div class="question-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+
+            <div>
+                <h4>¿Deseas eliminar este tipo de sistema?</h4>
+                <p>Estás a punto de eliminar una categoría del catálogo.</p>
+            </div>
+        </div>
+
+        <div class="question-delete-warning">
+            <i class="bi bi-info-circle"></i>
+            <span>
+                Si existen empresas, formularios u otros registros relacionados
+                con este tipo de sistema, la base de datos podría impedir su eliminación.
+            </span>
+        </div>
+
+        <div class="question-delete-info">
+            <div>
+                <span>Identificador</span>
+                <strong>#@Model.Id</strong>
+            </div>
+
+            <div>
+                <span>Nombre</span>
+                <strong>@Model.Nombre</strong>
+            </div>
+
+            <div class="full">
+                <span>Descripción</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                        ? "Sin descripción"
+                        : Model.Descripcion)
+                </strong>
+            </div>
+        </div>
+
+        <form asp-action="Eliminar"
+              asp-route-id="@Model.Id"
+              method="post"
+              class="question-delete-actions">
+
+            <button type="submit" class="btn-question-danger">
+                <i class="bi bi-trash3"></i>
+                Confirmar eliminación
+            </button>
+
+            <a asp-action="Index" class="btn-question-secondary">
+                Cancelar
+            </a>
+        </form>
     </div>
 </div>
-
-<form asp-action="Eliminar" asp-route-id="@Model.Id" method="post">
-    @Html.AntiForgeryToken()
-
-    <button type="submit" class="btn btn-danger">
-        Confirmar eliminación
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Cancelar
-    </a>
-</form>

@@ -1,28 +1,68 @@
-﻿
-@model CiberseguridadPYMES.Models.TipoSistema
+﻿@model CiberseguridadPYMES.Models.TipoSistema
 
 @{
     ViewData["Title"] = "Detalles del tipo de sistema";
 }
 
-<h1>Detalles del tipo de sistema</h1>
+<div class="question-page">
 
-<div class="card">
-    <div class="card-body">
-        <p><strong>Nombre:</strong> @Model.Nombre</p>
-        <p><strong>Descripción:</strong> @Model.Descripcion</p>
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / CATÁLOGOS</span>
+            <h1 class="page-title">Detalles del tipo de sistema</h1>
+            <p class="page-description">
+                Consulta la información de la categoría registrada.
+            </p>
+        </div>
 
-        <a asp-action="Index" class="btn btn-secondary">
-            Volver
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
         </a>
+    </div>
 
-        @if (User.IsInRole("Administrador"))
-        {
-            <a asp-action="Editar"
-               asp-route-id="@Model.Id"
-               class="btn btn-warning">
-                Editar
+    <div class="question-detail-card">
+
+        <div class="question-detail-heading">
+            <div class="question-form-icon violet">
+                <i class="bi bi-hdd-stack"></i>
+            </div>
+
+            <div>
+                <span class="question-detail-label">REGISTRO #@Model.Id</span>
+                <h4>@Model.Nombre</h4>
+            </div>
+        </div>
+
+        <div class="question-detail-content">
+            <div class="question-detail-item full">
+                <span>Nombre del tipo de sistema</span>
+                <strong>@Model.Nombre</strong>
+            </div>
+
+            <div class="question-detail-item full">
+                <span>Descripción</span>
+                <p>
+                    @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                        ? "No se ha registrado una descripción."
+                        : Model.Descripcion)
+                </p>
+            </div>
+        </div>
+
+        <div class="question-detail-footer">
+            <a asp-action="Index" class="btn-question-secondary">
+                Volver al catálogo
             </a>
-        }
+
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-action="Editar"
+                   asp-route-id="@Model.Id"
+                   class="btn-question-primary">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar tipo de sistema
+                </a>
+            }
+        </div>
     </div>
 </div>

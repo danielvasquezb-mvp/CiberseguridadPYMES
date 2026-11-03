@@ -7,193 +7,294 @@
 
     var preguntas = ViewBag.Preguntas as IEnumerable<Pregunta>
         ?? Enumerable.Empty<Pregunta>();
+
+    var listaPreguntas = preguntas.ToList();
+    var totalPreguntas = listaPreguntas.Count;
 }
 
-<h1>Evaluación de ciberseguridad</h1>
+<div class="eval-page eval-answer-page">
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">@Model.Formulario?.Nombre</h5>
-
-        <p class="mb-1">
-            <strong>Empresa:</strong> @Model.Empresa?.Nombre
-        </p>
-
-        <p class="mb-1">
-            <strong>Versión:</strong> @Model.Formulario?.Version
-        </p>
-
-        <p class="mb-0">
-            <strong>Fecha de inicio:</strong>
-            @Model.FechaInicio.ToString("dd/MM/yyyy HH:mm")
-        </p>
+    <div class="eval-breadcrumb">
+        <a asp-action="Index">Mis evaluaciones</a>
+        <span>/</span>
+        <span>Responder evaluación</span>
     </div>
-</div>
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["Mensaje"]
+    <div class="eval-header">
+        <div>
+            <span class="eval-eyebrow">EVALUACIÓN EN CURSO</span>
+            <h1>Evaluación de ciberseguridad</h1>
+            <p>Analiza cada pregunta y responde de acuerdo con la situación actual de tu empresa.</p>
+        </div>
+        <span class="eval-status status-progress">
+            <span></span> En proceso
+        </span>
     </div>
-}
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-warning" role="alert">
-        @TempData["Error"]
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert custom-alert alert-success">@TempData["Mensaje"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert custom-alert alert-warning">@TempData["Error"]</div>
+    }
+
+    <div class="eval-context-card">
+        <div class="eval-context-item">
+            <span class="eval-context-icon">▦</span>
+            <div>
+                <small>EMPRESA</small>
+                <strong>@Model.Empresa?.Nombre</strong>
+            </div>
+        </div>
+        <div class="eval-context-item">
+            <span class="eval-context-icon">▤</span>
+            <div>
+                <small>FORMULARIO</small>
+                <strong>@Model.Formulario?.Nombre</strong>
+            </div>
+        </div>
+        <div class="eval-context-item">
+            <span class="eval-context-icon">◷</span>
+            <div>
+                <small>FECHA DE INICIO</small>
+                <strong>@Model.FechaInicio.ToString("dd/MM/yyyy HH:mm")</strong>
+            </div>
+        </div>
+        <div class="eval-context-item">
+            <span class="eval-context-icon">⌑</span>
+            <div>
+                <small>VERSIÓN</small>
+                <strong>@Model.Formulario?.Version</strong>
+            </div>
+        </div>
     </div>
-}
 
-@if (!preguntas.Any())
-{
-    <div class="alert alert-info">
-        Este formulario no tiene preguntas activas disponibles.
-    </div>
-}
-else
-{
-    <p class="text-muted">
-        Lee cada pregunta y selecciona la respuesta que mejor describa
-        la situación actual de tu empresa. Puedes añadir observaciones
-        cuando necesites aclarar tu respuesta.
-    </p>
-
-    <form asp-action="Guardar"
-          asp-route-id="@Model.Id"
-          method="post">
-
-        @Html.AntiForgeryToken()
-
-        <input type="hidden" name="id" value="@Model.Id" />
-
-        @foreach (var pregunta in preguntas)
-        {
-            var respuesta = Model.Respuestas
-                .FirstOrDefault(r => r.PreguntaId == pregunta.Id);
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <strong>Pregunta @pregunta.Orden</strong>
-
-                    @if (pregunta.Dimension != null)
-                    {
-                        <span class="text-muted">
-                            — @pregunta.Dimension.Nombre
-                        </span>
-                    }
+    @if (!listaPreguntas.Any())
+    {
+        <div class="eval-empty-state">
+            <div class="eval-empty-icon">!</div>
+            <h3>No hay preguntas disponibles</h3>
+            <p>Este formulario no tiene preguntas activas disponibles.</p>
+            <a asp-action="Index" class="btn btn-outline-light">Volver a evaluaciones</a>
+        </div>
+    }
+    else
+    {
+        <div class="eval-progress-card">
+            <div class="eval-progress-top">
+                <div>
+                    <strong>Progreso de la evaluación</strong>
+                    <span id="evalProgressText">0 de @totalPreguntas preguntas respondidas</span>
                 </div>
+                <strong class="eval-progress-percent" id="evalProgressPercent">0%</strong>
+            </div>
+            <div class="eval-progress-track">
+                <div class="eval-progress-fill" id="evalProgressFill"></div>
+            </div>
+            <div class="eval-progress-bottom">
+                <span>Responde todas las preguntas antes de finalizar.</span>
+                <span>@totalPreguntas preguntas en total</span>
+            </div>
+        </div>
 
-                <div class="card-body">
-                    <p class="fw-semibold">@pregunta.Texto</p>
+        <form asp-action="Guardar"
+              asp-route-id="@Model.Id"
+              method="post"
+              id="evalAnswerForm">
 
-                    @if (!string.IsNullOrWhiteSpace(pregunta.CriterioCumplimiento))
-                    {
-                        <p>
-                            <strong>Criterio de cumplimiento:</strong>
-                            @pregunta.CriterioCumplimiento
-                        </p>
-                    }
+            <input type="hidden" name="id" value="@Model.Id" />
 
-                    @if (!string.IsNullOrWhiteSpace(pregunta.ReferenciaTecnica))
-                    {
-                        <p class="small text-muted">
-                            <strong>Referencia técnica:</strong>
-                            @pregunta.ReferenciaTecnica
-                        </p>
-                    }
+            @{
+                var numero = 0;
+                var dimensionActual = "";
+            }
 
-                    <div class="mb-3">
-                        <span class="form-label d-block">
-                            Selecciona una respuesta:
+            @foreach (var pregunta in listaPreguntas)
+            {
+                numero++;
+
+                var respuesta = Model.Respuestas?
+                    .FirstOrDefault(r => r.PreguntaId == pregunta.Id);
+
+                var nombreDimension = pregunta.Dimension?.Nombre ?? "Sin dimensión";
+
+                if (dimensionActual != nombreDimension)
+                {
+                    dimensionActual = nombreDimension;
+
+                    <div class="eval-dimension-heading">
+                        <span class="eval-dimension-line"></span>
+                        <span>@nombreDimension</span>
+                    </div>
+                }
+
+                <section class="eval-question-card" data-question-card>
+                    <div class="eval-question-top">
+                        <span class="eval-question-number">
+                            PREGUNTA @numero
                         </span>
+                        <span class="eval-question-order">
+                            N.º @pregunta.Orden
+                        </span>
+                    </div>
+
+                    <div class="eval-question-body">
+                        <h3>@pregunta.Texto</h3>
+
+                        @if (!string.IsNullOrWhiteSpace(pregunta.CriterioCumplimiento))
+                        {
+                            <div class="eval-criterion">
+                                <strong>Criterio de cumplimiento</strong>
+                                <p>@pregunta.CriterioCumplimiento</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(pregunta.ReferenciaTecnica))
+                        {
+                            <div class="eval-reference">
+                                <span>ⓘ</span>
+                                <p><strong>Referencia técnica:</strong> @pregunta.ReferenciaTecnica</p>
+                            </div>
+                        }
+
+                        <div class="eval-answer-label">
+                            Selecciona la respuesta que corresponda:
+                            <span>*</span>
+                        </div>
 
                         @{
                             var opciones = pregunta.TipoRespuesta == "DosOpciones"
                                 ? new[]
                                 {
-                                    new { Valor = 1, Texto = "Sí" },
-                                    new { Valor = 3, Texto = "No" }
+                                    new { Valor = 1, Texto = "Sí", Ayuda = "La condición se cumple." },
+                                    new { Valor = 3, Texto = "No", Ayuda = "La condición no se cumple." }
                                 }
                                 : new[]
                                 {
-                                    new { Valor = 1, Texto = "Sí" },
-                                    new { Valor = 2, Texto = "Parcialmente" },
-                                    new { Valor = 3, Texto = "No" },
-                                    new { Valor = 4, Texto = "No sabe / no conoce" },
-                                    new { Valor = 5, Texto = "No aplica" }
+                                    new { Valor = 1, Texto = "Sí", Ayuda = "La condición se cumple." },
+                                    new { Valor = 2, Texto = "Parcialmente", Ayuda = "La condición se cumple de forma incompleta." },
+                                    new { Valor = 3, Texto = "No", Ayuda = "La condición no se cumple." },
+                                    new { Valor = 4, Texto = "No sabe / no conoce", Ayuda = "No cuenta con información para determinarlo." },
+                                    new { Valor = 5, Texto = "No aplica", Ayuda = "La condición no corresponde a la empresa." }
                                 };
                         }
 
-                        @foreach (var opcion in opciones)
-                        {
-                            <div class="form-check mb-2">
-                                <input class="form-check-input"
-                                       type="radio"
-                                       id="valor_@(pregunta.Id)_@(opcion.Valor)"
-                                       name="valor_@pregunta.Id"
-                                       value="@opcion.Valor"
-                                       checked="@(respuesta?.Valor == opcion.Valor)"
-                                       required />
+                        <div class="eval-options-grid">
+                            @foreach (var opcion in opciones)
+                            {
+                                var radioId = $"valor_{pregunta.Id}_{opcion.Valor}";
 
-                                <label class="form-check-label"
-                                       for="valor_@(pregunta.Id)_@(opcion.Valor)">
-                                    @opcion.Texto
+                                <label class="eval-option @(respuesta?.Valor == opcion.Valor ? "selected" : "")"
+                                       for="@radioId">
+                                    <input type="radio"
+                                           id="@radioId"
+                                           name="valor_@pregunta.Id"
+                                           value="@opcion.Valor"
+                                           checked="@(respuesta?.Valor == opcion.Valor)"
+                                           required
+                                           data-question-radio />
+
+                                    <span class="eval-option-indicator"></span>
+                                    <span class="eval-option-content">
+                                        <strong>@opcion.Texto</strong>
+                                        <small>@opcion.Ayuda</small>
+                                    </span>
                                 </label>
-                            </div>
-                        }
-                    </div>
+                            }
+                        </div>
 
-                    <div class="mb-2">
-                        <label for="observacion_@pregunta.Id"
-                               class="form-label">
-                            Observaciones (opcional)
-                        </label>
-
-                        <textarea id="observacion_@pregunta.Id"
-                                  name="observacion_@pregunta.Id"
-                                  class="form-control"
-                                  rows="2"
-                                  maxlength="1000"
-                                  placeholder="Agrega detalles que ayuden a explicar tu respuesta...">@respuesta?.Observaciones</textarea>
+                        <div class="eval-observation">
+                            <label for="observacion_@pregunta.Id">
+                                Observaciones <span>(opcional)</span>
+                            </label>
+                            <textarea id="observacion_@pregunta.Id"
+                                      name="observacion_@pregunta.Id"
+                                      class="form-control"
+                                      rows="2"
+                                      maxlength="1000"
+                                      placeholder="Escribe información adicional que ayude a explicar tu respuesta...">@respuesta?.Observaciones</textarea>
+                        </div>
                     </div>
+                </section>
+            }
+
+            <div class="eval-save-actions">
+                <div>
+                    <strong>¿Necesitas continuar después?</strong>
+                    <span>Guarda tus respuestas y podrás continuar más tarde.</span>
+                </div>
+                <div class="eval-action-buttons">
+                    <a asp-action="Index" class="btn btn-outline-light">
+                        Salir
+                    </a>
+                    <button type="submit" class="btn btn-accent">
+                        Guardar respuestas <span>✓</span>
+                    </button>
                 </div>
             </div>
-        }
+        </form>
 
-        <div class="d-flex flex-wrap gap-2 mb-4">
-            <button type="submit" class="btn btn-primary">
-                Guardar respuestas
-            </button>
-
-            <a asp-action="Index" class="btn btn-secondary">
-                Salir y continuar después
-            </a>
-        </div>
-    </form>
-
-    <div class="card border-warning">
-        <div class="card-body">
-            <h5 class="card-title">Finalizar evaluación</h5>
-
-            <p>
-                Antes de finalizar, guarda tus respuestas.
-                Una vez finalizada, ya no podrás modificarlas desde
-                este formulario.
-            </p>
-
+        <div class="eval-finish-card">
+            <div class="eval-finish-icon">✓</div>
+            <div class="eval-finish-content">
+                <h3>¿Terminaste de responder?</h3>
+                <p>Verifica que todas las respuestas estén guardadas antes de finalizar. Después de finalizar no podrás modificarlas desde este formulario.</p>
+            </div>
             <form asp-action="Finalizar"
                   asp-route-id="@Model.Id"
                   method="post"
                   onsubmit="return confirm('¿Estás seguro de finalizar esta evaluación? Verifica que hayas guardado tus respuestas.');">
 
-                @Html.AntiForgeryToken()
-
                 <input type="hidden" name="id" value="@Model.Id" />
 
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-finish">
                     Finalizar evaluación
                 </button>
             </form>
         </div>
-    </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll("[data-question-card]");
+            const total = cards.length;
+            const fill = document.getElementById("evalProgressFill");
+            const text = document.getElementById("evalProgressText");
+            const percent = document.getElementById("evalProgressPercent");
+
+            function updateProgress() {
+                let answered = 0;
+
+                cards.forEach(card => {
+                    const selected = card.querySelector("input[type='radio']:checked");
+
+                    card.querySelectorAll(".eval-option").forEach(option => {
+                        const input = option.querySelector("input");
+                        option.classList.toggle("selected", input.checked);
+                    });
+
+                    if (selected) answered++;
+                });
+
+                const percentage = total > 0
+                    ? Math.round((answered / total) * 100)
+                    : 0;
+
+                fill.style.width = percentage + "%";
+                text.textContent = `${answered} de ${total} preguntas respondidas`;
+                percent.textContent = percentage + "%";
+            }
+
+            document.querySelectorAll("[data-question-radio]").forEach(radio => {
+                radio.addEventListener("change", updateProgress);
+            });
+
+            updateProgress();
+        });
+    </script>
 }

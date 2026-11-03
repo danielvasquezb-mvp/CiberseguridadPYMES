@@ -1,61 +1,103 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Iniciar evaluación";
 }
 
-<h1>Iniciar evaluación</h1>
+<div class="eval-page eval-create-page">
 
-<p class="text-muted">
-    Selecciona la empresa y el formulario para comenzar
-    la evaluación de ciberseguridad.
-</p>
+    <div class="eval-breadcrumb">
+        <a asp-action="Index">Mis evaluaciones</a>
+        <span>/</span>
+        <span>Nueva evaluación</span>
+    </div>
 
-<div class="card">
-    <div class="card-body">
-        <form asp-action="Crear" method="post">
-            @Html.AntiForgeryToken()
+    <div class="eval-header">
+        <div>
+            <span class="eval-eyebrow">NUEVO PROCESO</span>
+            <h1>Iniciar evaluación</h1>
+            <p>Configura los datos iniciales para evaluar el nivel de ciberseguridad de tu empresa.</p>
+        </div>
+        <div class="eval-header-symbol">◎</div>
+    </div>
 
-            <div asp-validation-summary="All"
-                 class="text-danger mb-3"></div>
-
-            <div class="mb-3">
-                <label for="empresaId" class="form-label">
-                    Empresa
-                </label>
-
-                <select id="empresaId"
-                        name="empresaId"
-                        class="form-select"
-                        asp-items="ViewBag.Empresas"
-                        required>
-                    <option value="">Seleccione su empresa</option>
-                </select>
-
-                <span class="form-text">
-                    Solo puedes seleccionar empresas asociadas a tu cuenta.
-                </span>
+    <div class="eval-create-layout">
+        <div class="eval-form-card">
+            <div class="eval-form-card-heading">
+                <div class="eval-step-number">01</div>
+                <div>
+                    <h2>Configuración inicial</h2>
+                    <p>Selecciona la empresa y el formulario que deseas utilizar.</p>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="formularioId" class="form-label">
-                    Formulario de evaluación
-                </label>
+            <form asp-action="Crear" method="post">
+                @if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All"
+         class="validation-summary mb-4"></div>
+}
 
-                <select id="formularioId"
-                        name="formularioId"
-                        class="form-select"
-                        asp-items="ViewBag.Formularios"
-                        required>
-                    <option value="">Seleccione un formulario</option>
-                </select>
+                <div class="eval-field-group">
+                    <label for="empresaId" class="form-label">
+                        Empresa <span class="eval-required">*</span>
+                    </label>
+                    <div class="eval-select-wrapper">
+                        <span class="eval-field-symbol">▦</span>
+                        <select id="empresaId"
+                                name="empresaId"
+                                class="form-select eval-select"
+                                asp-items="ViewBag.Empresas"
+                                required>
+                            <option value="">Seleccione su empresa</option>
+                        </select>
+                    </div>
+                    <small>Solo puedes seleccionar empresas asociadas a tu cuenta.</small>
+                </div>
+
+                <div class="eval-field-group">
+                    <label for="formularioId" class="form-label">
+                        Formulario de evaluación <span class="eval-required">*</span>
+                    </label>
+                    <div class="eval-select-wrapper">
+                        <span class="eval-field-symbol">▤</span>
+                        <select id="formularioId"
+                                name="formularioId"
+                                class="form-select eval-select"
+                                asp-items="ViewBag.Formularios"
+                                required>
+                            <option value="">Seleccione un formulario</option>
+                        </select>
+                    </div>
+                    <small>El formulario determina las preguntas que se presentarán durante la evaluación.</small>
+                </div>
+
+                <div class="eval-form-divider"></div>
+
+                <div class="eval-form-actions">
+                    <a asp-action="Index" class="btn btn-outline-light">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-accent">
+                        Comenzar evaluación <span>→</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <aside class="eval-info-card">
+            <div class="eval-info-icon">⌁</div>
+            <span class="eval-eyebrow">ANTES DE COMENZAR</span>
+            <h3>¿Qué debes tener en cuenta?</h3>
+            <ul>
+                <li><span>✓</span> Selecciona la empresa que tienes asociada.</li>
+                <li><span>✓</span> Elige el formulario correspondiente.</li>
+                <li><span>✓</span> Responde según la situación actual de la empresa.</li>
+                <li><span>✓</span> Guarda tus respuestas antes de finalizar.</li>
+            </ul>
+            <div class="eval-info-note">
+                <span>i</span>
+                <p>La evaluación se basa en las respuestas proporcionadas por el responsable del sistema.</p>
             </div>
-
-            <button type="submit" class="btn btn-primary">
-                Comenzar evaluación
-            </button>
-
-            <a asp-action="Index" class="btn btn-secondary">
-                Cancelar
-            </a>
-        </form>
+        </aside>
     </div>
 </div>

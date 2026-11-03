@@ -1,24 +1,52 @@
-﻿ 
+﻿
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#080b10" />
+
     <title>@ViewData["Title"] - CiberseguridadPYMES</title>
-    <script type="importmap"></script>
+
+    <link rel="preconnect" href="https://rsms.me" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CiberseguridadPYMES.styles.css" asp-append-version="true" />
+    <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.min.css">
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    CiberseguridadPYMES
+        <nav class="navbar navbar-expand-lg navbar-dark main-navbar">
+            <div class="container-fluid px-3 px-lg-4">
+
+                <a class="navbar-brand brand-container"
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <span class="brand-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2.8L20 6V11.5C20 16.3 16.6 20.1 12 21.5C7.4 20.1 4 16.3 4 11.5V6L12 2.8Z"
+                                  stroke="currentColor" stroke-width="1.7"
+                                  stroke-linejoin="round" />
+                            <path d="M9 11.8L11 13.8L15.5 9.3"
+                                  stroke="currentColor" stroke-width="1.7"
+                                  stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+
+                    <span class="brand-text">
+                        <strong>Ciberseguridad</strong><span>PYMES</span>
+                        <small>Evaluación y diagnóstico</small>
+                    </span>
                 </a>
 
-                <button class="navbar-toggler" type="button"
+                <button class="navbar-toggler custom-toggler"
+                        type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#menuPrincipal"
                         aria-controls="menuPrincipal"
@@ -27,97 +55,111 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div id="menuPrincipal"
-                     class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="collapse navbar-collapse" id="menuPrincipal">
 
-                    
-<ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav main-menu me-auto">
 
-    <li class="nav-item">
-        <a class="nav-link text-dark"
-           asp-controller="Home"
-           asp-action="Index">
-            Inicio
-        </a>
-    </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Home"
+                               asp-action="Index">
+                                <span class="menu-icon">⌂</span>
+                                Inicio
+                            </a>
+                        </li>
 
-    @if (User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark"
-               asp-controller="Empresa"
-               asp-action="Index">
-                Empresas
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link text-dark"
-               asp-controller="Evaluacion"
-               asp-action="Index">
-                Evaluaciones
-            </a>
-        </li>
-
-        @if (User.IsInRole("Administrador"))
-        {
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-dark"
-                   href="#"
-                   id="menuConfiguracion"
-                   role="button"
-                   data-bs-toggle="dropdown"
-                   aria-expanded="false">
-                    Configuración
-                </a>
-
-                <ul class="dropdown-menu"
-                    aria-labelledby="menuConfiguracion">
-
-                    <li>
-                        <a class="dropdown-item"
-                           asp-controller="TipoSistema"
-                           asp-action="Index">
-                            Tipos de sistema
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item"
-                           asp-controller="Dimension"
-                           asp-action="Index">
-                            Dimensiones
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item"
-                           asp-controller="Formulario"
-                           asp-action="Index">
-                            Formularios
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item"
-                           asp-controller="Pregunta"
-                           asp-action="Index">
-                            Preguntas
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        }
-    }
-</ul>
-
-
-                    <ul class="navbar-nav">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <span class="nav-link text-dark">
-                                    Hola, @(User.FindFirst("NombreCompleto")?.Value ?? User.Identity?.Name ?? "Usuario")
+                                <a class="nav-link"
+                                   asp-controller="Empresa"
+                                   asp-action="Index">
+                                    <span class="menu-icon">▦</span>
+                                    Empresas
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Evaluacion"
+                                   asp-action="Index">
+                                    <span class="menu-icon">◈</span>
+                                    Evaluaciones
+                                </a>
+                            </li>
+
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle"
+                                       href="#"
+                                       id="menuConfiguracion"
+                                       role="button"
+                                       data-bs-toggle="dropdown"
+                                       aria-expanded="false">
+                                        <span class="menu-icon">⚙</span>
+                                        Configuración
+                                    </a>
+
+                                    <ul class="dropdown-menu"
+                                        aria-labelledby="menuConfiguracion">
+
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="TipoSistema"
+                                               asp-action="Index">
+                                                Tipos de sistema
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="Dimension"
+                                               asp-action="Index">
+                                                Dimensiones
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="Formulario"
+                                               asp-action="Index">
+                                                Formularios
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="Pregunta"
+                                               asp-action="Index">
+                                                Preguntas
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav account-menu">
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item user-welcome">
+                                <span class="user-avatar">
+                                    @(User.FindFirst("NombreCompleto")?.Value
+                                        ?.Substring(0, 1).ToUpper()
+                                        ?? User.Identity?.Name?.Substring(0, 1).ToUpper()
+                                        ?? "U")
+                                </span>
+
+                                <span class="user-name">
+                                    <small>Sesión iniciada</small>
+                                    <strong>
+                                        @(User.FindFirst("NombreCompleto")?.Value
+                                            ?? User.Identity?.Name
+                                            ?? "Usuario")
+                                    </strong>
                                 </span>
                             </li>
 
@@ -126,9 +168,8 @@
                                       asp-action="Logout"
                                       method="post"
                                       class="d-inline">
-                                    <button type="submit"
-                                            class="nav-link btn btn-link text-dark">
-                                        Cerrar sesión
+                                    <button type="submit" class="logout-button">
+                                        <span>↪</span> Cerrar sesión
                                     </button>
                                 </form>
                             </li>
@@ -136,7 +177,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
+                                <a class="nav-link login-link"
                                    asp-controller="Account"
                                    asp-action="Login">
                                     Iniciar sesión
@@ -144,10 +185,10 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
+                                <a class="register-button"
                                    asp-controller="Account"
                                    asp-action="Register">
-                                    Registrarse
+                                    Registrarse <span>→</span>
                                 </a>
                             </li>
                         }
@@ -157,13 +198,31 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="page-background">
+        <main role="main" class="main-content">
+
             @if (TempData["Mensaje"] != null)
             {
-                <div class="alert alert-success alert-dismissible fade show"
+                <div class="alert custom-alert alert-success alert-dismissible fade show"
                      role="alert">
-                    @TempData["Mensaje"]
+                    <span class="alert-symbol">✓</span>
+                    <span>@TempData["Mensaje"]</span>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Cerrar">
+                    </button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert custom-alert alert-danger alert-dismissible fade show"
+                     role="alert">
+                    <span class="alert-symbol">!</span>
+                    <span>@TempData["Error"]</span>
+
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="alert"
@@ -173,21 +232,35 @@
             }
 
             @RenderBody()
+
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - CiberseguridadPYMES -
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-status"></span>
+                CiberseguridadPYMES
+            </div>
+
+            <span class="footer-description">
+                Plataforma de evaluación de ciberseguridad para PYMES
+            </span>
+
             <a asp-controller="Home" asp-action="Privacy">
                 Privacidad
             </a>
+
+            <span class="footer-copyright">
+                © 2026
+            </span>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

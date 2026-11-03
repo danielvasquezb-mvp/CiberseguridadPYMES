@@ -1,41 +1,79 @@
-﻿
-@model CiberseguridadPYMES.Models.TipoSistema
+﻿@model CiberseguridadPYMES.Models.TipoSistema
 
 @{
     ViewData["Title"] = "Editar tipo de sistema";
 }
 
-<h1>Editar tipo de sistema</h1>
+<div class="question-page">
 
-<form asp-action="Editar" asp-route-id="@Model.Id" method="post">
-    @Html.AntiForgeryToken()
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / CATÁLOGOS</span>
+            <h1 class="page-title">Editar tipo de sistema</h1>
+            <p class="page-description">
+                Modifica la información de esta categoría.
+            </p>
+        </div>
 
-    <input type="hidden" name="id" value="@Model.Id" />
-
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-    <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input id="nombre"
-               name="nombre"
-               class="form-control"
-               value="@Model.Nombre"
-               required />
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
     </div>
 
-    <div class="mb-3">
-        <label for="descripcion" class="form-label">Descripción</label>
-        <textarea id="descripcion"
-                  name="descripcion"
-                  class="form-control"
-                  rows="3">@Model.Descripcion</textarea>
+    <div class="question-form-card system-form-container">
+
+        <div class="question-form-heading">
+            <div class="question-form-icon violet">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <div>
+                <h5>Actualizar información</h5>
+                <p>Estás modificando el registro #@Model.Id.</p>
+            </div>
+        </div>
+
+        <form asp-action="Editar"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="All" class="question-validation"></div>
+            }
+
+            <div class="question-form-grid">
+                <div class="question-field full">
+                    <label for="nombre">Nombre del tipo de sistema</label>
+                    <input id="nombre"
+                           name="nombre"
+                           class="form-control"
+                           value="@Model.Nombre"
+                           maxlength="150"
+                           required />
+                </div>
+
+                <div class="question-field full">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion"
+                              name="descripcion"
+                              class="form-control"
+                              rows="4"
+                              maxlength="1000">@Model.Descripcion</textarea>
+                </div>
+            </div>
+
+            <div class="question-form-actions">
+                <a asp-action="Index" class="btn-question-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn-question-primary">
+                    <i class="bi bi-check-lg"></i>
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
     </div>
-
-    <button type="submit" class="btn btn-primary">
-        Guardar cambios
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Cancelar
-    </a>
-</form>
+</div>

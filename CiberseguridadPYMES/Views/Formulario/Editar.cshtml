@@ -1,13 +1,38 @@
-﻿@model CiberseguridadPYMES.Models.Formulario
+﻿
+@model CiberseguridadPYMES.Models.Formulario
 
 @{
     ViewData["Title"] = "Editar formulario";
 }
 
-<h1>Editar formulario</h1>
+<div class="question-page">
 
-<div class="card">
-    <div class="card-body">
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / FORMULARIOS</span>
+            <h1 class="page-title">Editar formulario</h1>
+            <p class="page-description">
+                Actualiza la información y configuración del formulario seleccionado.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
+    </div>
+
+    <div class="question-form-card system-form-container">
+        <div class="question-form-heading">
+            <div class="question-form-heading-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <div>
+                <h2>Modificar información</h2>
+                <p>Formulario: @Model.Nombre</p>
+            </div>
+        </div>
+
         <form asp-action="Editar"
               asp-route-id="@Model.Id"
               method="post">
@@ -16,84 +41,71 @@
 
             <input type="hidden" name="id" value="@Model.Id" />
 
-            <div asp-validation-summary="All"
-                 class="text-danger mb-3"></div>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="All" class="question-validation"></div>
+            }
 
-            <div class="mb-3">
-                <label for="nombre" class="form-label">
-                    Nombre
-                </label>
+            <div class="question-form-grid">
+                <div class="question-field question-field-full">
+                    <label for="nombre">Nombre del formulario</label>
+                    <input id="nombre"
+                           name="nombre"
+                           class="question-input"
+                           value="@Model.Nombre"
+                           maxlength="150"
+                           required />
+                </div>
 
-                <input id="nombre"
-                       name="nombre"
-                       class="form-control"
-                       value="@Model.Nombre"
-                       maxlength="150"
-                       required />
+                <div class="question-field">
+                    <label for="version">Versión</label>
+                    <input id="version"
+                           name="version"
+                           class="question-input"
+                           value="@Model.Version"
+                           maxlength="20"
+                           required />
+                </div>
+
+                <div class="question-field">
+                    <label for="tipoSistemaId">Tipo de sistema</label>
+                    <select id="tipoSistemaId"
+                            name="tipoSistemaId"
+                            class="question-select"
+                            asp-items="ViewBag.TiposSistema"
+                            required>
+                        <option value="">Seleccione un tipo de sistema</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="version" class="form-label">
-                    Versión
-                </label>
+            <div class="question-active-option">
+                <div class="question-active-info">
+                    <i class="bi bi-toggle-on"></i>
+                    <div>
+                        <strong>Formulario activo</strong>
+                        <span>Define si el formulario puede utilizarse en nuevas evaluaciones.</span>
+                    </div>
+                </div>
 
-                <input id="version"
-                       name="version"
-                       class="form-control"
-                       value="@Model.Version"
-                       maxlength="20"
-                       required />
-            </div>
-
-            <div class="mb-3">
-                <label for="tipoSistemaId" class="form-label">
-                    Tipo de sistema
-                </label>
-
-                <select id="tipoSistemaId"
-                        name="tipoSistemaId"
-                        class="form-select"
-                        asp-items="ViewBag.TiposSistema"
-                        required>
-                    <option value="">
-                        Seleccione un tipo de sistema
-                    </option>
-                </select>
-            </div>
-
-            <div class="form-check mb-3">
-                @if (Model.Activo)
-                {
+                <div class="form-check form-switch">
                     <input id="activo"
                            name="activo"
                            type="checkbox"
                            value="true"
                            class="form-check-input"
-                           checked />
-                }
-                else
-                {
-                    <input id="activo"
-                           name="activo"
-                           type="checkbox"
-                           value="true"
-                           class="form-check-input" />
-                }
-
-                <input type="hidden" name="activo" value="false" />
-
-                <label for="activo" class="form-check-label">
-                    Formulario activo
-                </label>
+                           checked="@Model.Activo" />
+                    <input type="hidden" name="activo" value="false" />
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">
-                Guardar cambios
-            </button>
-
-            <a asp-action="Index" class="btn btn-secondary">
-                Cancelar
-            </a>
+            <div class="question-form-actions">
+                <a asp-action="Index" class="btn-question-secondary">Cancelar</a>
+                <button type="submit" class="btn-question-primary">
+                    <i class="bi bi-save"></i>
+                    Guardar cambios
+                </button>
+            </div>
         </form>
     </div>
 </div>

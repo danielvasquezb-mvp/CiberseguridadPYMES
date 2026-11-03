@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using CiberseguridadPYMES.Services;
+using QuestPDF.Fluent;
 
 namespace CiberseguridadPYMES.Controllers
 {
@@ -18,6 +20,7 @@ namespace CiberseguridadPYMES.Controllers
         }
 
         // GET: Diagnostico/Detalles?evaluacionId=1
+        // GET: Diagnostico/Detalles?evaluacionId=1
         [HttpGet]
         public async Task<IActionResult> Detalles(int evaluacionId)
         {
@@ -25,18 +28,33 @@ namespace CiberseguridadPYMES.Controllers
                 ClaimTypes.NameIdentifier);
 
             var diagnostico = await _context.Diagnosticos
+                .AsNoTracking()
+
                 .Include(d => d.Evaluacion)
                     .ThenInclude(e => e!.Empresa)
+
                 .Include(d => d.Evaluacion)
                     .ThenInclude(e => e!.Formulario)
+
                 .Include(d => d.ResultadosDimension)
                     .ThenInclude(r => r.Dimension)
+
+                // Cargar los hallazgos y sus preguntas.
                 .Include(d => d.Hallazgos)
                     .ThenInclude(h => h.Pregunta)
                         .ThenInclude(p => p!.Dimension)
+
+                // Cargar las recomendaciones activas de cada pregunta.
+                .Include(d => d.Hallazgos)
+                    .ThenInclude(h => h.Pregunta)
+                        .ThenInclude(p => p!.Recomendaciones
+                            .Where(r => r.Activa))
+
                 .FirstOrDefaultAsync(d =>
                     d.EvaluacionId == evaluacionId);
 
+            // Verificar que el diagnóstico exista y pertenezca
+            // a una empresa del usuario autenticado.
             if (diagnostico == null ||
                 diagnostico.Evaluacion == null ||
                 diagnostico.Evaluacion.Empresa == null ||
@@ -46,6 +64,59 @@ namespace CiberseguridadPYMES.Controllers
             }
 
             return View(diagnostico);
+        }
+
+        // GET: Diagnostico/DescargarPdf/1
+        [HttpGet]
+        public async Task<IActionResult> DescargarPdf(int id)
+        {
+            string? usuarioId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            var diagnostico = await _context.Diagnosticos
+                .AsNoTracking()
+
+                .Include(d => d.Evaluacion)
+                    .ThenInclude(e => e!.Empresa)
+
+                .Include(d => d.Evaluacion)
+                    .ThenInclude(e => e!.Formulario)
+
+                .Include(d => d.ResultadosDimension)
+                    .ThenInclude(r => r.Dimension)
+
+                .Include(d => d.Hallazgos)
+                    .ThenInclude(h => h.Pregunta)
+                        .ThenInclude(p => p!.Dimension)
+
+                .Include(d => d.Hallazgos)
+                    .ThenInclude(h => h.Pregunta)
+                        .ThenInclude(p => p!.Recomendaciones
+                            .Where(r => r.Activa))
+
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            // Verificar que el diagnóstico pertenezca al usuario.
+            if (diagnostico == null ||
+                diagnostico.Evaluacion == null ||
+                diagnostico.Evaluacion.Empresa == null ||
+                diagnostico.Evaluacion.Empresa.ApplicationUserId != usuarioId)
+            {
+                return NotFound();
+            }
+
+            // Construir el documento.
+            var documento = new DiagnosticoPdfDocument(diagnostico);
+
+            // Generar el archivo PDF en memoria.
+            byte[] archivoPdf = documento.GeneratePdf();
+
+            string nombreArchivo = $"Diagnostico_Ciberseguridad_{diagnostico.Id}.pdf";
+
+            return File(
+                archivoPdf,
+                "application/pdf",
+                nombreArchivo);
         }
 
         // POST: Diagnostico/Generar

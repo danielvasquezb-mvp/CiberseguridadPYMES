@@ -4,58 +4,112 @@
     ViewData["Title"] = "Detalles de la pregunta";
 }
 
-<h1>Detalles de la pregunta</h1>
+<div class="question-page">
 
-<div class="card">
-    <div class="card-header">
-        Información de la pregunta
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / PREGUNTAS</span>
+            <h1 class="page-title">Detalles de la pregunta</h1>
+            <p class="page-description">
+                Consulta la información y los criterios de esta pregunta.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
     </div>
 
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Formulario</dt>
-            <dd class="col-sm-9">@Model.Formulario?.Nombre</dd>
+    <div class="question-detail-card">
 
-            <dt class="col-sm-3">Dimensión</dt>
-            <dd class="col-sm-9">@Model.Dimension?.Nombre</dd>
+        <div class="question-detail-heading">
+            <div class="question-form-icon violet">
+                <i class="bi bi-card-text"></i>
+            </div>
 
-            <dt class="col-sm-3">Pregunta</dt>
-            <dd class="col-sm-9">@Model.Texto</dd>
+            <div>
+                <span class="question-detail-label">PREGUNTA #@Model.Id</span>
+                <h4>Información general</h4>
+            </div>
 
-            <dt class="col-sm-3">Referencia técnica</dt>
-            <dd class="col-sm-9">
-                @(string.IsNullOrWhiteSpace(Model.ReferenciaTecnica)
-                    ? "No especificada"
-                    : Model.ReferenciaTecnica)
-            </dd>
+            <div class="ms-auto">
+                @if (Model.Activa)
+                {
+                    <span class="question-status active">
+                        <span></span> Activa
+                    </span>
+                }
+                else
+                {
+                    <span class="question-status inactive">
+                        <span></span> Inactiva
+                    </span>
+                }
+            </div>
+        </div>
 
-            <dt class="col-sm-3">Criterio de cumplimiento</dt>
-            <dd class="col-sm-9">
-                @(string.IsNullOrWhiteSpace(Model.CriterioCumplimiento)
-                    ? "No especificado"
-                    : Model.CriterioCumplimiento)
-            </dd>
+        <div class="question-detail-content">
+            <div class="question-detail-item">
+                <span>Formulario</span>
+                <strong>@Model.Formulario?.Nombre</strong>
+            </div>
 
-            <dt class="col-sm-3">Orden</dt>
-            <dd class="col-sm-9">@Model.Orden</dd>
+            <div class="question-detail-item">
+                <span>Dimensión de ciberseguridad</span>
+                <strong>@Model.Dimension?.Nombre</strong>
+            </div>
 
-            <dt class="col-sm-3">Estado</dt>
-            <dd class="col-sm-9">
-                @(Model.Activa ? "Activa" : "Inactiva")
-            </dd>
-        </dl>
+            <div class="question-detail-item">
+                <span>Orden de presentación</span>
+                <strong>@Model.Orden</strong>
+            </div>
 
-        <a asp-action="Index" class="btn btn-secondary">
-            Volver
-        </a>
+            <div class="question-detail-item">
+                <span>Tipo de respuesta</span>
+                <strong>
+                    @(Model.TipoRespuesta == "DosOpciones"
+                        ? "Dos opciones (Sí / No)"
+                        : "Cinco opciones")
+                </strong>
+            </div>
 
-        @if (User.IsInRole("Administrador"))
-        {
-            <a asp-action="Editar"
-               asp-route-id="@Model.Id"
-               class="btn btn-warning">
-                Editar
+            <div class="question-detail-item full">
+                <span>Texto de la pregunta</span>
+                <p>@Model.Texto</p>
+            </div>
+
+            <div class="question-detail-item full">
+                <span>Referencia técnica</span>
+                <p>
+                    @(string.IsNullOrWhiteSpace(Model.ReferenciaTecnica)
+                        ? "No especificada"
+                        : Model.ReferenciaTecnica)
+                </p>
+            </div>
+
+            <div class="question-detail-item full">
+                <span>Criterio de cumplimiento</span>
+                <p>
+                    @(string.IsNullOrWhiteSpace(Model.CriterioCumplimiento)
+                        ? "No especificado"
+                        : Model.CriterioCumplimiento)
+                </p>
+            </div>
+        </div>
+
+        <div class="question-detail-footer">
+            <a asp-action="Index" class="btn-question-secondary">
+                Volver al listado
             </a>
-        }
+
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-action="Editar"
+                   asp-route-id="@Model.Id"
+                   class="btn-question-primary">
+                    <i class="bi bi-pencil-square"></i> Editar pregunta
+                </a>
+            }
+        </div>
     </div>
 </div>

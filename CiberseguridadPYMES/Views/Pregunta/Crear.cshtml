@@ -3,172 +3,267 @@
 
     string tipoRespuestaSeleccionado =
         ViewData["TipoRespuesta"]?.ToString() ?? "CincoOpciones";
+
+    var recomendacionesActuales =
+        ViewData["Recomendaciones"] as List<CiberseguridadPYMES.Models.Recomendacion>
+        ?? new List<CiberseguridadPYMES.Models.Recomendacion>();
 }
 
-<h1>Registrar pregunta</h1>
+<div class="question-page">
 
-<div class="card">
-    <div class="card-body">
-        <form asp-action="Crear" method="post">
-            @Html.AntiForgeryToken()
+    <div class="question-header">
+        <div>
+            <span class="section-eyebrow">CONFIGURACIÓN / PREGUNTAS</span>
+            <h1 class="page-title">Registrar pregunta</h1>
+            <p class="page-description">
+                Define el contenido, la dimensión y las recomendaciones asociadas.
+            </p>
+        </div>
 
-            <div asp-validation-summary="All"
-                 class="text-danger mb-3"></div>
-
-            <div class="mb-3">
-                <label for="formularioId" class="form-label">
-                    Formulario
-                </label>
-
-                <select id="formularioId"
-                        name="formularioId"
-                        class="form-select"
-                        asp-items="ViewBag.Formularios"
-                        required>
-                    <option value="">Seleccione un formulario</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="dimensionId" class="form-label">
-                    Dimensión de ciberseguridad
-                </label>
-
-                <select id="dimensionId"
-                        name="dimensionId"
-                        class="form-select"
-                        asp-items="ViewBag.Dimensiones"
-                        required>
-                    <option value="">Seleccione una dimensión</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="texto" class="form-label">
-                    Texto de la pregunta
-                </label>
-
-                <textarea id="texto"
-                          name="texto"
-                          class="form-control"
-                          rows="3"
-                          maxlength="1000"
-                          required>@ViewData["Texto"]</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="referenciaTecnica" class="form-label">
-                    Referencia técnica
-                </label>
-
-                <input id="referenciaTecnica"
-                       name="referenciaTecnica"
-                       class="form-control"
-                       maxlength="300"
-                       value="@ViewData["ReferenciaTecnica"]" />
-
-                <small class="form-text text-muted">
-                    Ejemplo: ISO/IEC 27001:2022 o NIST CSF 2.0.
-                </small>
-            </div>
-
-            <div class="mb-3">
-                <label for="criterioCumplimiento" class="form-label">
-                    Criterio de cumplimiento
-                </label>
-
-                <textarea id="criterioCumplimiento"
-                          name="criterioCumplimiento"
-                          class="form-control"
-                          rows="3"
-                          maxlength="1000">@ViewData["CriterioCumplimiento"]</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="tipoRespuesta" class="form-label">
-                    Tipo de respuesta
-                </label>
-
-                <select id="tipoRespuesta"
-                        name="tipoRespuesta"
-                        class="form-select"
-                        required>
-                    @if (tipoRespuestaSeleccionado == "CincoOpciones")
-                    {
-                        <option value="CincoOpciones" selected>
-                            Cinco opciones
-                        </option>
-                    }
-                    else
-                    {
-                        <option value="CincoOpciones">
-                            Cinco opciones
-                        </option>
-                    }
-
-                    @if (tipoRespuestaSeleccionado == "DosOpciones")
-                    {
-                        <option value="DosOpciones" selected>
-                            Dos opciones (Sí/No)
-                        </option>
-                    }
-                    else
-                    {
-                        <option value="DosOpciones">
-                            Dos opciones (Sí/No)
-                        </option>
-                    }
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="orden" class="form-label">
-                    Orden de presentación
-                </label>
-
-                <input id="orden"
-                       name="orden"
-                       type="number"
-                       class="form-control"
-                       min="1"
-                       value="@(ViewData["Orden"] ?? 1)"
-                       required />
-            </div>
-
-            <div class="form-check mb-3">
-                @if (ViewData["Activa"] == null ||
-                     (bool)ViewData["Activa"]!)
-                {
-                    <input id="activa"
-                           name="activa"
-                           type="checkbox"
-                           value="true"
-                           class="form-check-input"
-                           checked />
-                }
-                else
-                {
-                    <input id="activa"
-                           name="activa"
-                           type="checkbox"
-                           value="true"
-                           class="form-check-input" />
-                }
-
-                <input type="hidden" name="activa" value="false" />
-
-                <label for="activa" class="form-check-label">
-                    Pregunta activa
-                </label>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-                Guardar pregunta
-            </button>
-
-            <a asp-action="Index" class="btn btn-secondary">
-                Cancelar
-            </a>
-        </form>
+        <a asp-action="Index" class="btn-question-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
     </div>
+
+    <form asp-action="Crear" method="post" id="formPregunta">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div asp-validation-summary="All" class="question-validation"></div>
+        }
+
+        <div class="question-form-card">
+            <div class="question-form-heading">
+                <div class="question-form-icon violet">
+                    <i class="bi bi-card-text"></i>
+                </div>
+                <div>
+                    <h5>Información de la pregunta</h5>
+                    <p>Datos principales para configurar la pregunta.</p>
+                </div>
+            </div>
+
+            <div class="question-form-grid">
+                <div class="question-field">
+                    <label for="formularioId">Formulario</label>
+                    <select id="formularioId" name="formularioId"
+                            class="form-select" asp-items="ViewBag.Formularios" required>
+                        <option value="">Seleccione un formulario</option>
+                    </select>
+                </div>
+
+                <div class="question-field">
+                    <label for="dimensionId">Dimensión de ciberseguridad</label>
+                    <select id="dimensionId" name="dimensionId"
+                            class="form-select" asp-items="ViewBag.Dimensiones" required>
+                        <option value="">Seleccione una dimensión</option>
+                    </select>
+                </div>
+
+                <div class="question-field full">
+                    <label for="texto">Texto de la pregunta</label>
+                    <textarea id="texto" name="texto" class="form-control"
+                              rows="3" maxlength="1000" required>@ViewData["Texto"]</textarea>
+                    <small>Escribe una pregunta clara y evaluable.</small>
+                </div>
+
+                <div class="question-field">
+                    <label for="referenciaTecnica">Referencia técnica</label>
+                    <input id="referenciaTecnica" name="referenciaTecnica"
+                           class="form-control" maxlength="300"
+                           value="@ViewData["ReferenciaTecnica"]"
+                           placeholder="Ej. ISO/IEC 27001:2022" />
+                </div>
+
+                <div class="question-field">
+                    <label for="orden">Orden de presentación</label>
+                    <input id="orden" name="orden" type="number"
+                           class="form-control" min="1"
+                           value="@(ViewData["Orden"] ?? 1)" required />
+                </div>
+
+                <div class="question-field full">
+                    <label for="criterioCumplimiento">Criterio de cumplimiento</label>
+                    <textarea id="criterioCumplimiento" name="criterioCumplimiento"
+                              class="form-control" rows="3" maxlength="1000"
+                              placeholder="Describe qué condiciones permiten considerar que la práctica se cumple.">@ViewData["CriterioCumplimiento"]</textarea>
+                </div>
+
+                <div class="question-field">
+                    <label for="tipoRespuesta">Tipo de respuesta</label>
+                    <select id="tipoRespuesta" name="tipoRespuesta"
+                            class="form-select" required>
+                        <option value="CincoOpciones"
+                                selected="@(tipoRespuestaSeleccionado == "CincoOpciones")">
+                            Cinco opciones
+                        </option>
+                        <option value="DosOpciones"
+                                selected="@(tipoRespuestaSeleccionado == "DosOpciones")">
+                            Dos opciones (Sí / No)
+                        </option>
+                    </select>
+                    <small>
+                        Cinco opciones incluye Sí, Parcialmente, No,
+                        No sabe/no conoce y No aplica.
+                    </small>
+                </div>
+
+                <div class="question-field">
+                    <label>Estado de la pregunta</label>
+                    <label class="question-switch">
+                        <input id="activa" name="activa" type="checkbox"
+                               value="true"
+                               checked="@(ViewData["Activa"] == null || (bool)ViewData["Activa"]!)" />
+                        <span class="question-switch-slider"></span>
+                        <span>Pregunta activa</span>
+                    </label>
+                    <input type="hidden" name="activa" value="false" />
+                </div>
+            </div>
+        </div>
+
+        <div class="question-form-card">
+            <div class="question-form-heading">
+                <div class="question-form-icon green">
+                    <i class="bi bi-lightbulb"></i>
+                </div>
+                <div>
+                    <h5>Recomendaciones de mejora</h5>
+                    <p>
+                        Acciones que se sugerirán cuando esta pregunta genere un hallazgo.
+                    </p>
+                </div>
+
+                <button type="button" class="btn-question-outline"
+                        id="agregarRecomendacion">
+                    <i class="bi bi-plus-lg"></i> Agregar
+                </button>
+            </div>
+
+            <div id="contenedorRecomendaciones">
+                @for (int i = 0; i < recomendacionesActuales.Count; i++)
+                {
+                    var recomendacion = recomendacionesActuales[i];
+
+                    <div class="question-recommendation-item">
+                        <div class="question-recommendation-top">
+                            <span><i class="bi bi-lightbulb"></i> Recomendación</span>
+                            <button type="button" class="question-remove-recommendation">
+                                <i class="bi bi-trash3"></i> Quitar
+                            </button>
+                        </div>
+
+                        <div class="question-form-grid">
+                            <div class="question-field full">
+                                <label>Título</label>
+                                <input name="recomendaciones[@i].Titulo"
+                                       class="form-control" maxlength="200"
+                                       value="@recomendacion.Titulo" />
+                            </div>
+
+                            <div class="question-field full">
+                                <label>Descripción</label>
+                                <textarea name="recomendaciones[@i].Descripcion"
+                                          class="form-control" rows="3"
+                                          maxlength="1000">@recomendacion.Descripcion</textarea>
+                            </div>
+
+                            <div class="question-field">
+                                <label>Prioridad</label>
+                                <select name="recomendaciones[@i].Prioridad"
+                                        class="form-select">
+                                    <option value="Alta" selected="@(recomendacion.Prioridad == "Alta")">Alta</option>
+                                    <option value="Media" selected="@(recomendacion.Prioridad == "Media")">Media</option>
+                                    <option value="Baja" selected="@(recomendacion.Prioridad == "Baja")">Baja</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div id="recomendacionesVacias" class="question-recommendation-empty"
+                 hidden>
+                <i class="bi bi-lightbulb"></i>
+                <span>Aún no has agregado recomendaciones.</span>
+            </div>
+        </div>
+
+        <div class="question-form-actions">
+            <a asp-action="Index" class="btn-question-secondary">Cancelar</a>
+            <button type="submit" class="btn-question-primary">
+                <i class="bi bi-check-lg"></i> Guardar pregunta
+            </button>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+    <script>
+        const contenedor = document.getElementById("contenedorRecomendaciones");
+        const botonAgregar = document.getElementById("agregarRecomendacion");
+        const recomendacionesVacias = document.getElementById("recomendacionesVacias");
+
+        function actualizarRecomendaciones() {
+            const tarjetas = contenedor.querySelectorAll(".question-recommendation-item");
+
+            tarjetas.forEach((tarjeta, indice) => {
+                tarjeta.querySelectorAll("[name]").forEach(campo => {
+                    campo.name = campo.name.replace(
+                        /recomendaciones\[\d+\]/g,
+                        `recomendaciones[${indice}]`
+                    );
+                });
+            });
+
+            recomendacionesVacias.hidden = tarjetas.length > 0;
+        }
+
+        botonAgregar.addEventListener("click", function () {
+            const tarjeta = document.createElement("div");
+            tarjeta.className = "question-recommendation-item";
+
+            tarjeta.innerHTML = `
+                <div class="question-recommendation-top">
+                    <span><i class="bi bi-lightbulb"></i> Recomendación</span>
+                    <button type="button" class="question-remove-recommendation">
+                        <i class="bi bi-trash3"></i> Quitar
+                    </button>
+                </div>
+                <div class="question-form-grid">
+                    <div class="question-field full">
+                        <label>Título</label>
+                        <input name="recomendaciones[0].Titulo"
+                               class="form-control" maxlength="200" />
+                    </div>
+                    <div class="question-field full">
+                        <label>Descripción</label>
+                        <textarea name="recomendaciones[0].Descripcion"
+                                  class="form-control" rows="3"
+                                  maxlength="1000"></textarea>
+                    </div>
+                    <div class="question-field">
+                        <label>Prioridad</label>
+                        <select name="recomendaciones[0].Prioridad" class="form-select">
+                            <option value="Alta">Alta</option>
+                            <option value="Media" selected>Media</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+                </div>`;
+
+            contenedor.appendChild(tarjeta);
+            actualizarRecomendaciones();
+        });
+
+        contenedor.addEventListener("click", function (evento) {
+            const boton = evento.target.closest(".question-remove-recommendation");
+
+            if (boton) {
+                boton.closest(".question-recommendation-item").remove();
+                actualizarRecomendaciones();
+            }
+        });
+
+        actualizarRecomendaciones();
+    </script>
+}
